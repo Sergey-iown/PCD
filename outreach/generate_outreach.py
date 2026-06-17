@@ -178,30 +178,251 @@ def linkedin_search_url(name: str, company: str) -> str:
     return f"https://www.linkedin.com/search/results/people/?{q}"
 
 
+def first_name(name: str) -> str:
+    return name.split()[0]
+
+
+# ---------------------------------------------------------------------------
+# Segmentation: which kind of contact is this, for iOWN (a Swiss "wealth &
+# business architect" serving international/HNW families and their advisers)?
+# ---------------------------------------------------------------------------
+def classify(position: str, company: str) -> str:
+    p, c = position.lower(), company.lower()
+
+    if "rwanda" in c or "high commissioner" in p or "counsellor" in p:
+        return "government"
+    if "locate" in c or "finance isle of man" in c:
+        return "jurisdiction"
+    if "pr &" in p or "communications" in p:
+        return "pr"
+
+    banks = ["julius baer", "union bancaire", "ubp", "coutts", "arbuthnot",
+             "turicum", "rothschild", "hassium", "butterfield mortgages",
+             "broadgate"]
+    if any(b in c for b in banks) or "private banker" in p or "private banking" in p:
+        return "private_bank"
+
+    tax_firms = ["haysmac", "mha", "sestini", "simmons gainsford", "brebners",
+                 "bdo", "azets", "ostberg", "altara", "sandstone tax"]
+    if "tax" in p or "tax" in c or any(t in c for t in tax_firms):
+        return "tax"
+
+    law_firms = ["isolas", "forsters", "charles russell", "kingsley napley",
+                 "penningtons", "stewarts", "spencer west", "appleby",
+                 "schellenberg", "burges salmon", "birketts", "irwin mitchell",
+                 "morr & co", "seddons", "hagen wolf", "consilia legal",
+                 "vaia legal", "good law", "french law practice", "dingli",
+                 "m.b.kemp", "glascoterose", "edge -", "1ec barristers",
+                 "lester aldridge", "cains"]
+    if (any(l in c for l in law_firms)
+            or any(k in p for k in ["lawyer", "solicitor", "advocate", "barrister", "legal"])
+            or "avvocati" in c or "advogados" in c or "law firm" in c):
+        return "law"
+
+    fiduciary = ["jtc", "suntera", "tmf", "oak group", "coriats", "abacus",
+                 "hfl", "stonewell", "fidux", "obbard", "alexanders", "hkcs",
+                 "conexus", "csc global", "group eleven"]
+    if (any(f in c for f in fiduciary) or "trust" in p or "fiduciary" in p
+            or ("corporate" in p and "service" in p)):
+        return "trust_fiduciary"
+
+    if "philanthropic" in c or "gift fund" in c:
+        return "philanthropy"
+    if "ebury" in c or "currency" in c:
+        return "fx_payments"
+    if "property" in c or "data centre" in c or "mortgages" in c:
+        return "property"
+    if "immigration" in p:
+        return "immigration"
+
+    invest = ["sarasin", "charles stanley", "james hambro", "longview",
+              "luxury capital", "oakcean", "arc & co", "isio", "hampden capital",
+              "capital international", "birchin lane"]
+    if (any(w in c for w in invest)
+            or any(k in p for k in ["investment manager", "portfolio manager",
+                                    "wealth", "private office", "international wealth"])):
+        return "investment"
+
+    if any(k in p for k in ["business development", "relationship manager",
+                            "strategic partnership", "sales"]):
+        return "bd"
+    return "other"
+
+
+CORE_SEGMENTS = {"private_bank", "trust_fiduciary", "law", "tax", "investment"}
+TIER2_SEGMENTS = {"bd", "philanthropy", "fx_payments", "immigration",
+                  "property", "jurisdiction"}
+
+SEGMENT_LABEL = {
+    "host": "event host", "private_bank": "private banking",
+    "trust_fiduciary": "trust / fiduciary", "law": "private-client law",
+    "tax": "private-client tax", "investment": "wealth / investment",
+    "bd": "business development", "philanthropy": "philanthropy",
+    "fx_payments": "FX / payments", "immigration": "immigration",
+    "property": "property / real estate", "jurisdiction": "jurisdiction promotion",
+    "government": "government / diplomatic", "pr": "PR / communications",
+    "other": "advisory / other",
+}
+
+
+def seniority(position: str) -> str:
+    p = position.lower()
+    if not p:
+        return "unknown"
+    if "partner" in p and "associate" not in p:
+        return "senior"
+    senior_kw = ["founder", "ceo", "chief", "chairman", "managing partner",
+                 "managing director", "managing shareholder", "head of",
+                 "director", "principal", "senior vice president", "market head",
+                 "general manager"]
+    if any(k in p for k in senior_kw):
+        return "senior"
+    return "junior"
+
+
+def tier_and_reason(role, segment, level):
+    label = SEGMENT_LABEL[segment]
+    if role == "Host":
+        return 1, "Event host — thank-you + key network node"
+    if segment in CORE_SEGMENTS and level == "senior":
+        return 1, f"Senior {label} contact — direct referral source / decision-maker"
+    if segment in CORE_SEGMENTS:
+        return 2, f"{label.capitalize()} contact ({level}) — nurture / future referral"
+    if segment in TIER2_SEGMENTS:
+        return 2, f"{label.capitalize()} — adjacent to iOWN's clients"
+    if segment == "other" and level == "senior":
+        return 2, "Senior advisory contact — worth a personal connect"
+    if segment == "government":
+        return 3, "Government / diplomatic — relationship, not commercial"
+    return 3, f"{label.capitalize()} — long-tail / lower priority"
+
+
+# ---------------------------------------------------------------------------
+# Personalised LinkedIn connection note (<= 300 chars, LinkedIn's limit).
+# ---------------------------------------------------------------------------
+LIMIT = 300
+PREFIX = ("Hi {first}, great being among the PCD crowd at Drapers' Hall — I "
+          "presented iOWN, wealth & business architecture for international families.")
+SUFFIX = " Let's stay connected. Best, Sergey"
+
+CLAUSES = {  # segment: (with-company, plain)
+    "private_bank": ("Trusted private bankers like those at {company} matter hugely to the families we serve.",
+                     "Trusted private bankers are central to the families we serve."),
+    "trust_fiduciary": ("We work closely with fiduciary teams like {company} on cross-border structures.",
+                        "We work closely with fiduciary and trustee teams on cross-border structures."),
+    "law": ("I often collaborate with private-client lawyers such as {company} on international structuring.",
+            "I often collaborate with private-client lawyers on international structuring."),
+    "tax": ("Cross-border tax expertise like {company}'s is exactly what our families rely on.",
+            "Cross-border tax expertise is exactly what our families rely on."),
+    "investment": ("Lots of common ground with the wealth and investment work at {company}.",
+                   "Lots of common ground with the wealth and investment side of your work."),
+    "bd": ("Feels like real overlap between iOWN and {company} worth exploring.",
+           "Feels like there could be real overlap worth exploring."),
+    "philanthropy": ("Philanthropy is close to many of our families' plans — I'd love to hear more about {company}.",
+                     "Philanthropy is close to many of our families' plans and I'd love to hear more."),
+    "fx_payments": ("International clients often need FX and payments partners like {company}.",
+                    "International clients often need strong FX and payments partners."),
+    "immigration": ("Globally mobile families regularly need immigration counsel like {company}'s.",
+                    "Globally mobile families regularly need trusted immigration counsel."),
+    "property": ("Our international clients frequently ask about UK property, where {company} looks very relevant.",
+                 "Our international clients frequently ask about UK property and real estate."),
+    "jurisdiction": ("Jurisdictional insight like {company}'s is invaluable for our international clients.",
+                     "Jurisdictional insight is invaluable for our international clients."),
+    "pr": ("Great to connect after a brilliant event.",
+           "Great to connect after a brilliant event."),
+    "other": ("I really enjoyed the conversations and would value comparing notes.",
+              "I really enjoyed the conversations and would value comparing notes."),
+}
+
+
+def connection_message(role, segment, name, company):
+    first = first_name(name)
+    if role == "Host":
+        return (f"Hi {first}, thank you for a superb PCD London at Drapers' Hall "
+                f"— a privilege to present iOWN, wealth & business architecture for "
+                f"international families. Truly grateful for the platform and glad to "
+                f"connect. Best, Sergey")
+    if segment == "government":
+        return (f"Hi {first}, a real honour to share the room with you at the PCD "
+                f"London conference at Drapers' Hall, where I presented iOWN. I'd "
+                f"value staying connected. With respect, Sergey")
+
+    with_co, plain = CLAUSES.get(segment, CLAUSES["other"])
+    prefix = PREFIX.format(first=first)
+    for clause in (with_co.format(company=company), plain):
+        msg = f"{prefix} {clause}{SUFFIX}"
+        if len(msg) <= LIMIT:
+            return msg
+    return f"{prefix}{SUFFIX}"  # last resort
+
+
 def main() -> None:
-    attendees_path = HERE / "attendees.csv"
-    tracker_path = HERE / "outreach_tracker.csv"
+    rows = []
+    for name, position, company, country, role in ATTENDEES:
+        seg = "host" if role == "Host" else classify(position, company)
+        level = seniority(position)
+        tier, reason = tier_and_reason(role, seg, level)
+        msg = connection_message(role, seg, name, company)
+        rows.append({
+            "Name": name, "First_Name": first_name(name), "Position": position,
+            "Company": company, "Country": country, "Role": role,
+            "Tier": tier, "Segment": SEGMENT_LABEL[seg], "Priority_Reason": reason,
+            "Connection_Message": msg, "Msg_Len": len(msg),
+            "LinkedIn_Search_URL": linkedin_search_url(name, company),
+        })
 
-    with attendees_path.open("w", newline="", encoding="utf-8") as f:
+    # Sort: Tier asc, then Host first, then by name.
+    rows.sort(key=lambda r: (r["Tier"], 0 if r["Role"] == "Host" else 1, r["Name"]))
+
+    # 1) Prioritised master CSV
+    cols = ["Tier", "Name", "First_Name", "Position", "Company", "Country",
+            "Role", "Segment", "Priority_Reason", "Connection_Message",
+            "LinkedIn_Search_URL"]
+    with (HERE / "attendees_prioritized.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+
+    # 2) Working tracker (with tier + ready message)
+    with (HERE / "outreach_tracker.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["Name", "Position", "Company", "Country", "Role", "LinkedIn_Search_URL"])
-        for name, position, company, country, role in ATTENDEES:
-            w.writerow([name, position, company, country, role,
-                        linkedin_search_url(name, company)])
+        w.writerow(["Tier", "Name", "Company", "Country", "Segment",
+                    "Connection_Message", "LinkedIn_Search_URL",
+                    "Connected (Y/N)", "Note_Sent (Y/N)", "Email_Sent (Y/N)",
+                    "Replied (Y/N)", "Notes"])
+        for r in rows:
+            w.writerow([r["Tier"], r["Name"], r["Company"], r["Country"],
+                        r["Segment"], r["Connection_Message"],
+                        r["LinkedIn_Search_URL"], "", "", "", "", ""])
 
-    with tracker_path.open("w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
-        w.writerow(["Name", "Company", "Country", "Role",
-                    "LinkedIn_Search_URL",
-                    "Connected (Y/N)", "Connect_Note_Sent (Y/N)",
-                    "Email_Sent (Y/N)", "Replied (Y/N)", "Notes"])
-        for name, _position, company, country, role in ATTENDEES:
-            w.writerow([name, company, country, role,
-                        linkedin_search_url(name, company),
-                        "", "", "", "", ""])
+    # 3) Copy-paste sheet, grouped by tier
+    with (HERE / "connection_messages.md").open("w", encoding="utf-8") as f:
+        f.write("# Personalised LinkedIn connection notes — PCD London, "
+                "17 June 2026\n\n")
+        f.write("Grouped by priority tier. For each person: open the search link, "
+                "click their profile, **Connect → Add a note**, paste the message. "
+                "Every note is within LinkedIn's 300-character limit.\n\n")
+        f.write("Work top-down: **Tier 1 first** (the people most worth your time), "
+                "then Tier 2. Spread invites over several days.\n")
+        tier_titles = {1: "Tier 1 — priority (senior referral sources, decision-makers, hosts)",
+                       2: "Tier 2 — relevant (nurture, adjacent services, juniors at key firms)",
+                       3: "Tier 3 — long tail (connect when you have time)"}
+        for tier in (1, 2, 3):
+            group = [r for r in rows if r["Tier"] == tier]
+            f.write(f"\n## {tier_titles[tier]}  ({len(group)})\n\n")
+            for r in group:
+                pos = f"{r['Position']}, " if r["Position"] else ""
+                f.write(f"- **{r['Name']}** — {pos}{r['Company']} ({r['Country']})  \n")
+                f.write(f"  [LinkedIn search]({r['LinkedIn_Search_URL']})  \n")
+                f.write(f"  > {r['Connection_Message']}\n\n")
 
-    print(f"Wrote {attendees_path.name} and {tracker_path.name} "
-          f"({len(ATTENDEES)} contacts).")
+    longest = max(rows, key=lambda r: r["Msg_Len"])
+    counts = {t: sum(1 for r in rows if r["Tier"] == t) for t in (1, 2, 3)}
+    print(f"Wrote attendees_prioritized.csv, outreach_tracker.csv, "
+          f"connection_messages.md ({len(rows)} contacts).")
+    print(f"Tier counts: {counts}")
+    print(f"Longest message: {longest['Msg_Len']} chars ({longest['Name']}) "
+          f"[limit {LIMIT}]")
 
 
 if __name__ == "__main__":

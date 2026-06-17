@@ -2,47 +2,66 @@
 
 Outreach materials for following up with attendees of the **PCD London Conference**
 (Drapers' Hall, City of London — Wednesday, 17 June 2026), where Sergey Bezborodov
-presented **iOWN**.
+presented **iOWN** (wealth & business architecture for international families).
 
 ## What's here
 
 | File | What it is |
 |------|------------|
-| `attendees.csv` | All 143 attendees (2 hosts + guests; you are excluded). Name, title, company, country, and a **one-click LinkedIn people-search link** per person. |
-| `outreach_tracker.csv` | Working tracker — mark each person Connected / Note sent / Email sent / Replied as you go. |
-| `linkedin_connection_note.md` | Ready-to-paste LinkedIn connection notes (under the 300-char limit), with variants. |
-| `greetings_email.md` | Post-event greetings email draft (subject + body + variants). |
-| `generate_outreach.py` | Source script that builds the two CSVs (re-run to regenerate). |
+| `attendees_prioritized.csv` | **Start here.** All 143 contacts, sorted by priority tier, each with a personalised LinkedIn connection note, a segment, a "why" reason, and a one-click LinkedIn search link. |
+| `connection_messages.md` | The personalised notes grouped by tier — open, click search link, **Connect → Add a note**, paste. |
+| `outreach_tracker.csv` | Working tracker (tier + ready message + status columns) — mark Connected / Note sent / Email sent / Replied. |
+| `greetings_email.md` | Post-event greetings email draft (subject + body + variants) for the email channel. |
+| `linkedin_connection_note.md` | Generic note templates (reference; `connection_messages.md` is the per-person version). |
+| `generate_outreach.py` | Source script that builds the CSVs + messages (re-run to regenerate). |
 
-## Why this is a kit and not "done for you"
+## Prioritisation (how the tiers were set)
 
-Two parts of the request can't be automated from here, so the kit makes them as fast
-as possible to do yourself:
+iOWN is a Swiss *wealth & business architect* serving international/HNW families and
+their advisers, so contacts are scored by how directly they can **refer business or
+partner**:
 
-1. **LinkedIn connecting** — there's no LinkedIn integration available, and bulk
-   automated invites violate LinkedIn's User Agreement and risk account restrictions.
-   So: each row in `attendees.csv` has a `LinkedIn_Search_URL` that pre-fills the
-   person's name + company. Click it → open their profile → **Connect → Add a note**
-   → paste from `linkedin_connection_note.md`. ~2 clicks each.
-2. **Email** — the guest list has no email addresses, and there's no mail-sending
-   tool here. Use `greetings_email.md` with your own mail client / mail-merge once you
-   have addresses.
+- **Tier 1 — priority (71):** senior decision-makers / referral sources at the core
+  segments — private banking, trust & fiduciary, private-client law, private-client
+  tax, wealth & investment — plus the two event hosts. Work these first.
+- **Tier 2 — relevant (63):** juniors at those same firms (longer nurture) and
+  adjacent services — business development, philanthropy, FX/payments, immigration,
+  property, and jurisdiction-promotion bodies.
+- **Tier 3 — long tail (9):** government/diplomatic (relationship, not commercial),
+  PR, and hard-to-place firms. Connect when you have time.
+
+Tiering is a heuristic from each person's title + firm — feel free to re-rank in the
+CSV. (Re-run `python3 generate_outreach.py` to rebuild after edits.)
+
+## "Can't I automate it instead of clicking 140 times?"
+
+Short answer: **automate the email, do LinkedIn semi-manually for Tier 1–2 only.**
+
+- **LinkedIn personalised invites can't be safely bulk-sent.** LinkedIn has no API/
+  feature to send connection notes in bulk. Third-party browser bots (Waalaxy,
+  Dux-Soup, LinkedHelper, HeyReach, …) automate the clicking but **violate LinkedIn's
+  User Agreement**, and ~140 personalised invites in a short burst is exactly the
+  pattern that gets accounts **restricted or banned**. Not worth risking your account.
+- **This kit removes the typing, not the click.** Each note is pre-written and
+  personalised, so a connect is: search link → Connect → Add a note → paste. Doing
+  this for ~80 Tier 1–2 people, spread over a week (keep well under ~100 invites/
+  week), is the safe, high-quality play. The Tier 3 long tail can be skipped or sent
+  as plain invites (no note).
+- **Email is the channel to scale.** Mail-merge is fully legitimate. Use
+  `greetings_email.md` with your mail client / a mail-merge tool to reach the whole
+  list at once — once you have email addresses (the guest list has none).
 
 ## Suggested workflow
 
-1. **Prioritise.** Sort `attendees.csv` by the people you actually met, then by your
-   highest-value targets (private banks, trust/family-office, private-client law/tax).
-2. **Connect on LinkedIn in batches.** Spread invites over several days (keep well
-   under ~100/week). Use the note variants; personalise the first line.
-3. **Email** the people you have / can find addresses for, using the draft.
-4. **Track** progress in `outreach_tracker.csv`.
+1. **LinkedIn, Tier 1 today**, Tier 2 over the next few days — copy-paste from
+   `connection_messages.md`, prioritising people you actually met.
+2. **Email** everyone you have / can find an address for, using the draft.
+3. **Track** in `outreach_tracker.csv`.
 
-## Regenerating the data
+## Regenerating
 
 ```bash
 python3 generate_outreach.py
 ```
-
-Edit the `ATTENDEES` list in the script to fix any title/company or add notes, then
-re-run. (Titles/companies were aligned row-by-row from the source PDF; a couple of
-attendees had no title printed and are intentionally left blank.)
+Edit the `ATTENDEES` list, the `classify()` rules, or the message `CLAUSES` in the
+script, then re-run. The script validates every note against the 300-char limit.
