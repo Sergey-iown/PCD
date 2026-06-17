@@ -4,6 +4,11 @@ A warm post-event note from **Sergey Bezborodov, Founder & CEO, iOWN**.
 Merge fields: `{{first_name}}`, `{{company}}` (optional). Edit the bracketed
 `[…]` lines to match the person before sending.
 
+> **Personalise it:** each contact has a tailored `Email_Opener` in
+> `attendees_prioritized.csv` / `outreach_tracker.csv` (and, for the top 25, in
+> `top_targets.md`). Drop that opener in as the first paragraph — right after
+> "Dear {{first_name}}," — in place of the generic opening line below.
+
 ---
 
 ## Subject line options

@@ -356,72 +356,198 @@ def connection_message(role, segment, name, company):
     return f"{prefix}{SUFFIX}"  # last resort
 
 
+# ---------------------------------------------------------------------------
+# Per-person email opener: a warm first line for greetings_email.md, dropped in
+# after "Dear {first_name},". Longer/warmer than the LinkedIn note (no char cap).
+# ---------------------------------------------------------------------------
+EMAIL_OPENERS = {
+    "host": ("Thank you again for having me at PCD London — presenting iOWN to that "
+             "room at Drapers' Hall was a genuine highlight, and I'm grateful to you "
+             "and the PCD team for the platform."),
+    "private_bank": ("It was a pleasure to share the room with you at PCD London. The "
+                     "families iOWN works with so often rely on trusted private bankers "
+                     "like the team at {company}, so I suspect there's real common ground "
+                     "between us."),
+    "trust_fiduciary": ("It was a pleasure to be among fellow private-client professionals "
+                        "at PCD London. iOWN works hand-in-hand with fiduciary and trustee "
+                        "teams like {company} on cross-border structures, so I'd love to "
+                        "find time to compare notes."),
+    "law": ("It was a pleasure to be in the room with you at PCD London. The international "
+            "structuring work you do at {company} is exactly where iOWN so often partners "
+            "with private-client lawyers, and I'd welcome the chance to explore where we "
+            "overlap."),
+    "tax": ("It was a pleasure to be among fellow advisers at PCD London. Cross-border tax "
+            "expertise like {company}'s is precisely what the families iOWN works with "
+            "depend on, so I'd love to stay in touch."),
+    "investment": ("It was a pleasure to be in the room with you at PCD London. There's a "
+                   "lot of common ground between iOWN and the wealth and investment work "
+                   "you do at {company}, and I'd value comparing notes."),
+    "bd": ("It was a pleasure to connect at PCD London. I suspect there's meaningful "
+           "overlap between iOWN and {company}, and I'd welcome the chance to explore it."),
+    "philanthropy": ("It was a pleasure to be among fellow private-client professionals at "
+                     "PCD London. Philanthropy features in many of the families iOWN works "
+                     "with, so I'd love to learn more about {company}'s work."),
+    "fx_payments": ("It was a pleasure to share the room at PCD London. iOWN's international "
+                    "clients regularly need strong FX and payments partners like {company}, "
+                    "so I'd welcome staying in touch."),
+    "immigration": ("It was a pleasure to be among fellow advisers at PCD London. The "
+                    "globally mobile families iOWN works with frequently need immigration "
+                    "counsel like {company}'s, and I'd value keeping in touch."),
+    "property": ("It was a pleasure to be in the room at PCD London. iOWN's international "
+                 "clients often ask about UK property, where {company} looks highly "
+                 "relevant, so I'd welcome staying connected."),
+    "jurisdiction": ("It was a pleasure to be at PCD London. Jurisdictional insight like "
+                     "{company}'s is invaluable to the international clients iOWN works "
+                     "with, and I'd value staying in touch."),
+    "government": ("It was an honour to share the room with you at PCD London at Drapers' "
+                   "Hall, where I was presenting iOWN. I'd be glad to stay in touch."),
+    "pr": ("It was a pleasure to be among the PCD London crowd at Drapers' Hall, where I "
+           "presented iOWN. I'd be glad to stay connected."),
+    "other": ("It was a pleasure to be among fellow professionals at PCD London. I really "
+              "enjoyed the conversations around the event, and I'd value comparing notes on "
+              "where iOWN and your work might align."),
+}
+
+
+def email_opener(segment, company):
+    template = EMAIL_OPENERS.get(segment, EMAIL_OPENERS["other"])
+    if "{company}" in template and not company:
+        return EMAIL_OPENERS["other"]
+    return template.format(company=company)
+
+
+# ---------------------------------------------------------------------------
+# Score Tier-1 contacts to trim a tight "Tier 1A" of top targets.
+# ---------------------------------------------------------------------------
+TOP_TARGET_COUNT = 25
+
+
+def target_score(segment, position, country):
+    p, s = position.lower(), 0
+    s += {"host": 6, "private_bank": 5}.get(segment, 4 if segment in CORE_SEGMENTS else 2)
+    if any(k in p for k in ["founder", "ceo", "chief exec", "chairman"]):
+        s += 5
+    elif any(k in p for k in ["managing partner", "managing director",
+                              "managing shareholder", "senior director"]):
+        s += 4
+    elif "head of" in p:
+        s += 4
+    elif ("partner" in p and "associate" not in p) or "principal" in p:
+        s += 3
+    elif "director" in p:
+        s += 2
+    else:
+        s += 1
+    if country in {"Switzerland", "Monaco"}:
+        s += 3
+    elif country in {"Jersey", "Guernsey", "Isle of Man", "Gibraltar", "Bermuda"}:
+        s += 2
+    else:
+        s += 1
+    return s
+
+
+BAND_RANK = {"1A": 0, "1B": 1, "2": 2, "3": 3}
+
+
 def main() -> None:
     rows = []
     for name, position, company, country, role in ATTENDEES:
         seg = "host" if role == "Host" else classify(position, company)
         level = seniority(position)
         tier, reason = tier_and_reason(role, seg, level)
-        msg = connection_message(role, seg, name, company)
         rows.append({
             "Name": name, "First_Name": first_name(name), "Position": position,
             "Company": company, "Country": country, "Role": role,
-            "Tier": tier, "Segment": SEGMENT_LABEL[seg], "Priority_Reason": reason,
-            "Connection_Message": msg, "Msg_Len": len(msg),
+            "Tier": tier, "_seg": seg, "Segment": SEGMENT_LABEL[seg],
+            "Priority_Reason": reason,
+            "Connection_Message": connection_message(role, seg, name, company),
+            "Email_Opener": email_opener(seg, company),
+            "Msg_Len": len(connection_message(role, seg, name, company)),
+            "_score": target_score(seg, position, country),
             "LinkedIn_Search_URL": linkedin_search_url(name, company),
         })
 
-    # Sort: Tier asc, then Host first, then by name.
-    rows.sort(key=lambda r: (r["Tier"], 0 if r["Role"] == "Host" else 1, r["Name"]))
+    # Band the Tier-1 group: top TOP_TARGET_COUNT by score => "1A", rest "1B".
+    tier1 = sorted((r for r in rows if r["Tier"] == 1),
+                   key=lambda r: (-r["_score"], r["Name"]))
+    top_ids = {id(r) for r in tier1[:TOP_TARGET_COUNT]}
+    for r in rows:
+        if r["Tier"] == 1:
+            r["Band"] = "1A" if id(r) in top_ids else "1B"
+        else:
+            r["Band"] = str(r["Tier"])
+
+    rows.sort(key=lambda r: (BAND_RANK[r["Band"]],
+                             0 if r["Role"] == "Host" else 1,
+                             -r["_score"], r["Name"]))
 
     # 1) Prioritised master CSV
-    cols = ["Tier", "Name", "First_Name", "Position", "Company", "Country",
+    cols = ["Band", "Tier", "Name", "First_Name", "Position", "Company", "Country",
             "Role", "Segment", "Priority_Reason", "Connection_Message",
-            "LinkedIn_Search_URL"]
+            "Email_Opener", "LinkedIn_Search_URL"]
     with (HERE / "attendees_prioritized.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
 
-    # 2) Working tracker (with tier + ready message)
+    # 2) Working tracker (with band + ready message + email opener)
     with (HERE / "outreach_tracker.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["Tier", "Name", "Company", "Country", "Segment",
-                    "Connection_Message", "LinkedIn_Search_URL",
+        w.writerow(["Band", "Name", "Company", "Country", "Segment",
+                    "Connection_Message", "Email_Opener", "LinkedIn_Search_URL",
                     "Connected (Y/N)", "Note_Sent (Y/N)", "Email_Sent (Y/N)",
                     "Replied (Y/N)", "Notes"])
         for r in rows:
-            w.writerow([r["Tier"], r["Name"], r["Company"], r["Country"],
-                        r["Segment"], r["Connection_Message"],
+            w.writerow([r["Band"], r["Name"], r["Company"], r["Country"],
+                        r["Segment"], r["Connection_Message"], r["Email_Opener"],
                         r["LinkedIn_Search_URL"], "", "", "", "", ""])
 
-    # 3) Copy-paste sheet, grouped by tier
+    # 3) Copy-paste sheet, grouped by band
+    band_titles = {
+        "1A": "Tier 1A — TOP TARGETS (start here: ~25 highest-value, do first)",
+        "1B": "Tier 1B — priority (other senior referral sources / decision-makers)",
+        "2": "Tier 2 — relevant (nurture, adjacent services, juniors at key firms)",
+        "3": "Tier 3 — long tail (connect when you have time)",
+    }
     with (HERE / "connection_messages.md").open("w", encoding="utf-8") as f:
         f.write("# Personalised LinkedIn connection notes — PCD London, "
                 "17 June 2026\n\n")
-        f.write("Grouped by priority tier. For each person: open the search link, "
+        f.write("Grouped by priority band. For each person: open the search link, "
                 "click their profile, **Connect → Add a note**, paste the message. "
                 "Every note is within LinkedIn's 300-character limit.\n\n")
-        f.write("Work top-down: **Tier 1 first** (the people most worth your time), "
-                "then Tier 2. Spread invites over several days.\n")
-        tier_titles = {1: "Tier 1 — priority (senior referral sources, decision-makers, hosts)",
-                       2: "Tier 2 — relevant (nurture, adjacent services, juniors at key firms)",
-                       3: "Tier 3 — long tail (connect when you have time)"}
-        for tier in (1, 2, 3):
-            group = [r for r in rows if r["Tier"] == tier]
-            f.write(f"\n## {tier_titles[tier]}  ({len(group)})\n\n")
+        f.write("Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites "
+                "over several days.\n")
+        for band in ("1A", "1B", "2", "3"):
+            group = [r for r in rows if r["Band"] == band]
+            f.write(f"\n## {band_titles[band]}  ({len(group)})\n\n")
             for r in group:
                 pos = f"{r['Position']}, " if r["Position"] else ""
                 f.write(f"- **{r['Name']}** — {pos}{r['Company']} ({r['Country']})  \n")
                 f.write(f"  [LinkedIn search]({r['LinkedIn_Search_URL']})  \n")
                 f.write(f"  > {r['Connection_Message']}\n\n")
 
+    # 4) Top-targets one-pager: LinkedIn note + email opener for the ~25 in 1A
+    with (HERE / "top_targets.md").open("w", encoding="utf-8") as f:
+        top = [r for r in rows if r["Band"] == "1A"]
+        f.write("# Top targets — PCD London (Tier 1A)\n\n")
+        f.write(f"The {len(top)} highest-value contacts to reach first — by seniority, "
+                "segment fit with iOWN, and jurisdiction. Each has a LinkedIn note **and** "
+                "an email opener (drop the opener in after \"Dear <first name>,\" in "
+                "`greetings_email.md`).\n\n")
+        for i, r in enumerate(top, 1):
+            pos = f"{r['Position']}, " if r["Position"] else ""
+            f.write(f"### {i}. {r['Name']} — {pos}{r['Company']} ({r['Country']})\n")
+            f.write(f"*{r['Priority_Reason']}* · [LinkedIn search]({r['LinkedIn_Search_URL']})\n\n")
+            f.write(f"**LinkedIn note:** {r['Connection_Message']}\n\n")
+            f.write(f"**Email opener:** {r['Email_Opener']}\n\n")
+
     longest = max(rows, key=lambda r: r["Msg_Len"])
-    counts = {t: sum(1 for r in rows if r["Tier"] == t) for t in (1, 2, 3)}
+    counts = {b: sum(1 for r in rows if r["Band"] == b) for b in ("1A", "1B", "2", "3")}
     print(f"Wrote attendees_prioritized.csv, outreach_tracker.csv, "
-          f"connection_messages.md ({len(rows)} contacts).")
-    print(f"Tier counts: {counts}")
-    print(f"Longest message: {longest['Msg_Len']} chars ({longest['Name']}) "
+          f"connection_messages.md, top_targets.md ({len(rows)} contacts).")
+    print(f"Band counts: {counts}")
+    print(f"Longest LinkedIn note: {longest['Msg_Len']} chars ({longest['Name']}) "
           f"[limit {LIMIT}]")
 
 
