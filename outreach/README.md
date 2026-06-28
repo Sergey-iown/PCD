@@ -8,7 +8,8 @@ presented **iOWN** (wealth & business architecture for international families).
 
 | File | What it is |
 |------|------------|
-| `top_targets.md` | **Start here.** The ~25 highest-value contacts (Tier 1A), each with its personalised LinkedIn note **and** email opener. Do these first. |
+| `outreach_helper.html` | **Open this in a browser.** A copy-paste accelerator: filter/search the list, one click to copy a person's note (or email opener), one click to open their LinkedIn search tab; remembers who you've done. *You* press Connect/Send — see "automation" below. |
+| `top_targets.md` | The ~25 highest-value contacts (Tier 1A), each with its personalised LinkedIn note **and** email opener. Do these first. |
 | `attendees_prioritized.csv` | All 143 contacts, banded 1A → 3, each with a personalised LinkedIn note, a personalised email opener, a segment, a "why" reason, and a one-click LinkedIn search link. |
 | `connection_messages.md` | The personalised LinkedIn notes grouped by band — open, click search link, **Connect → Add a note**, paste. |
 | `outreach_tracker.csv` | Working tracker (band + ready message + email opener + status columns) — mark Connected / Note sent / Email sent / Replied. |
@@ -56,6 +57,17 @@ Short answer: **automate the email, do LinkedIn semi-manually for Tier 1–2 onl
 - **Email is the channel to scale.** Mail-merge is fully legitimate. Use
   `greetings_email.md` with your mail client / a mail-merge tool to reach the whole
   list at once — once you have email addresses (the guest list has none).
+
+### What `outreach_helper.html` is (and isn't)
+
+It is a **human-in-the-loop accelerator**, not a bot. It only (a) copies a message to
+your clipboard and (b) opens a normal LinkedIn search tab. Every action *on LinkedIn*
+— Connect, Add a note, paste, Send — is done by you, by hand. It therefore doesn't
+access or automate LinkedIn and carries no User-Agreement / ban risk.
+
+A tool that auto-navigates LinkedIn and sends invites/messages for you is deliberately
+**not** included: it would breach LinkedIn's User Agreement and is the most reliable
+way to get an account restricted or banned. Use the helper + spread invites over time.
 
 ## Suggested workflow
 

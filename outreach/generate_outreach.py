@@ -14,6 +14,7 @@ had no title printed in the source; those are left blank on purpose.
 """
 
 import csv
+import json
 import urllib.parse
 from pathlib import Path
 
@@ -450,6 +451,112 @@ def target_score(segment, position, country):
 BAND_RANK = {"1A": 0, "1B": 1, "2": 2, "3": 3}
 
 
+# ---------------------------------------------------------------------------
+# Compliant copy-paste accelerator (NOT a bot): a self-contained HTML page.
+# "Copy note" puts the personalised message on the clipboard; "Open profile"
+# opens the LinkedIn search tab. YOU click Connect/Send on LinkedIn yourself —
+# nothing here automates LinkedIn, so there's no User-Agreement / ban risk.
+# Progress is remembered in the browser (localStorage).
+# ---------------------------------------------------------------------------
+HELPER_HTML = """<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCD London outreach helper</title>
+<style>
+ :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+ body{margin:0;background:#f4f5f7;color:#1d2129}
+ header{position:sticky;top:0;background:#0a66c2;color:#fff;padding:14px 20px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+ header h1{margin:0;font-size:18px}
+ .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px;font-size:13px}
+ .bar input,.bar select{padding:6px 8px;border:none;border-radius:6px;font-size:13px}
+ .bar label{color:#dbe9fb}
+ .note{background:#fff3cd;color:#664d03;padding:8px 20px;font-size:12.5px;border-bottom:1px solid #ffe69c}
+ main{padding:16px 20px;max-width:980px;margin:0 auto}
+ .card{background:#fff;border-radius:8px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+ .card.done{opacity:.5}
+ .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+ .name{font-weight:600;font-size:15px}
+ .meta{color:#65676b;font-size:13px}
+ .badge{font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;color:#fff}
+ .b1A{background:#0a66c2}.b1B{background:#378fe9}.b2{background:#6b7280}.b3{background:#9ca3af}
+ .met{background:#1a7f37;margin-left:6px}
+ .msg{background:#f0f2f5;border-radius:6px;padding:9px 11px;margin:9px 0;font-size:13.5px;white-space:pre-wrap}
+ .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+ button,a.btn{font:inherit;font-size:13px;border:none;border-radius:6px;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-block}
+ .copy{background:#0a66c2;color:#fff}.copy.email{background:#1a7f37}
+ .open{background:#e4e6eb;color:#050505}
+ .chk{margin-left:auto;font-size:13px;color:#444;user-select:none}
+ .count{color:#dbe9fb;margin-left:auto}
+</style></head><body>
+<header>
+ <h1>PCD London 2026 — outreach helper</h1>
+ <div class="bar">
+  <label>Band <select id="band">
+    <option value="">all</option><option>1A</option><option>1B</option>
+    <option value="2">2</option><option value="3">3</option></select></label>
+  <label><input type="checkbox" id="metonly"> met in person only</label>
+  <label><input type="checkbox" id="hidedone"> hide done</label>
+  <input id="q" placeholder="search name / company…" size="22">
+  <span class="count" id="count"></span>
+ </div>
+</header>
+<div class="note">Human-in-the-loop, not a bot: this only copies text and opens tabs.
+ You press Connect / Send on LinkedIn yourself. Spread invites over several days.</div>
+<main id="list"></main>
+<script>
+const DATA = __DATA__;
+const store = JSON.parse(localStorage.getItem('pcd_done')||'{}');
+const save = ()=>localStorage.setItem('pcd_done', JSON.stringify(store));
+const el = (h)=>{const t=document.createElement('template');t.innerHTML=h.trim();return t.content.firstChild;};
+function render(){
+ const band=document.getElementById('band').value;
+ const met=document.getElementById('metonly').checked;
+ const hide=document.getElementById('hidedone').checked;
+ const q=document.getElementById('q').value.toLowerCase();
+ const list=document.getElementById('list'); list.innerHTML='';
+ let shown=0;
+ for(const p of DATA){
+  if(band && p.band!==band) continue;
+  if(met && !p.met) continue;
+  if(hide && store[p.id]) continue;
+  if(q && !(p.name+' '+p.company).toLowerCase().includes(q)) continue;
+  shown++;
+  const card=el(`<div class="card ${store[p.id]?'done':''}">
+   <div class="top"><span><span class="name">${p.name}</span>
+     <span class="badge b${p.band}">${p.band}</span>${p.met?'<span class="badge met">MET</span>':''}
+     <div class="meta">${p.position?p.position+' · ':''}${p.company} · ${p.country}</div></span></div>
+   <div class="msg">${p.msg}</div>
+   <div class="actions">
+     <button class="copy" data-c="msg">Copy note</button>
+     <button class="copy email" data-c="email">Copy email opener</button>
+     <a class="btn open" href="${p.url}" target="_blank" rel="noopener">Open profile search ↗</a>
+     <label class="chk"><input type="checkbox" ${store[p.id]?'checked':''} data-done> done</label>
+   </div></div>`);
+  card.querySelector('[data-c="msg"]').onclick=()=>copy(p.msg, card.querySelector('[data-c="msg"]'),'Copy note');
+  card.querySelector('[data-c="email"]').onclick=()=>copy(p.email, card.querySelector('[data-c="email"]'),'Copy email opener');
+  card.querySelector('[data-done]').onchange=(e)=>{store[p.id]=e.target.checked;save();render();};
+  list.appendChild(card);
+ }
+ document.getElementById('count').textContent=shown+' shown · '+Object.values(store).filter(Boolean).length+' done';
+}
+function copy(text,btn,label){navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied ✓';setTimeout(()=>btn.textContent=label,1200);});}
+for(const id of ['band','metonly','hidedone','q']) document.getElementById(id).addEventListener('input',render);
+render();
+</script></body></html>
+"""
+
+
+def write_helper(rows):
+    data = [{
+        "id": r["Name"], "name": r["Name"], "position": r["Position"],
+        "company": r["Company"], "country": r["Country"], "band": r["Band"],
+        "met": bool(r.get("Met")), "msg": r["Connection_Message"],
+        "email": r["Email_Opener"], "url": r["LinkedIn_Search_URL"],
+    } for r in rows]
+    html = HELPER_HTML.replace("__DATA__", json.dumps(data, ensure_ascii=False))
+    (HERE / "outreach_helper.html").write_text(html, encoding="utf-8")
+
+
 def main() -> None:
     rows = []
     for name, position, company, country, role in ATTENDEES:
@@ -542,10 +649,14 @@ def main() -> None:
             f.write(f"**LinkedIn note:** {r['Connection_Message']}\n\n")
             f.write(f"**Email opener:** {r['Email_Opener']}\n\n")
 
+    # 5) Compliant copy-paste accelerator (open in a browser)
+    write_helper(rows)
+
     longest = max(rows, key=lambda r: r["Msg_Len"])
     counts = {b: sum(1 for r in rows if r["Band"] == b) for b in ("1A", "1B", "2", "3")}
     print(f"Wrote attendees_prioritized.csv, outreach_tracker.csv, "
-          f"connection_messages.md, top_targets.md ({len(rows)} contacts).")
+          f"connection_messages.md, top_targets.md, outreach_helper.html "
+          f"({len(rows)} contacts).")
     print(f"Band counts: {counts}")
     print(f"Longest LinkedIn note: {longest['Msg_Len']} chars ({longest['Name']}) "
           f"[limit {LIMIT}]")
