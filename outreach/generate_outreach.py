@@ -330,52 +330,52 @@ def tier_and_reason(role, segment, level):
 # ---------------------------------------------------------------------------
 # Personalised LinkedIn connection note (<= 300 chars, LinkedIn's limit).
 # ---------------------------------------------------------------------------
-LIMIT = 300
-PREFIX = ("Hi {first}, great being among the PCD crowd at Drapers' Hall — I "
-          "presented iOWN, wealth & business architecture for international families.")
-SUFFIX = " Let's stay connected. Best, Sergey"
+# LinkedIn caps connection notes at 200 chars for free accounts (300 only on
+# Premium), so everything below is built and validated to <= 200.
+LIMIT = 200
+PREFIX = "Hi {first}, good to be at PCD London where I presented iOWN (wealth & business architecture)."
+SUFFIX = " Would value connecting. Best, Sergey"
 
-CLAUSES = {  # segment: (with-company, plain)
-    "private_bank": ("Trusted private bankers like those at {company} matter hugely to the families we serve.",
-                     "Trusted private bankers are central to the families we serve."),
-    "trust_fiduciary": ("We work closely with fiduciary teams like {company} on cross-border structures.",
-                        "We work closely with fiduciary and trustee teams on cross-border structures."),
-    "law": ("I often collaborate with private-client lawyers such as {company} on international structuring.",
-            "I often collaborate with private-client lawyers on international structuring."),
-    "tax": ("Cross-border tax expertise like {company}'s is exactly what our families rely on.",
-            "Cross-border tax expertise is exactly what our families rely on."),
-    "investment": ("Lots of common ground with the wealth and investment work at {company}.",
-                   "Lots of common ground with the wealth and investment side of your work."),
-    "bd": ("Feels like real overlap between iOWN and {company} worth exploring.",
-           "Feels like there could be real overlap worth exploring."),
-    "philanthropy": ("Philanthropy is close to many of our families' plans — I'd love to hear more about {company}.",
-                     "Philanthropy is close to many of our families' plans and I'd love to hear more."),
-    "fx_payments": ("International clients often need FX and payments partners like {company}.",
-                    "International clients often need strong FX and payments partners."),
-    "immigration": ("Globally mobile families regularly need immigration counsel like {company}'s.",
-                    "Globally mobile families regularly need trusted immigration counsel."),
-    "property": ("Our international clients frequently ask about UK property, where {company} looks very relevant.",
-                 "Our international clients frequently ask about UK property and real estate."),
-    "jurisdiction": ("Jurisdictional insight like {company}'s is invaluable for our international clients.",
-                     "Jurisdictional insight is invaluable for our international clients."),
+CLAUSES = {  # segment: (with-company, plain) — kept short to fit the 200 cap
+    "private_bank": ("Private bankers like {company} matter to the families we serve.",
+                     "Trusted private bankers are key to the families we serve."),
+    "trust_fiduciary": ("We work closely with fiduciary teams like {company}.",
+                        "We work closely with fiduciary teams cross-border."),
+    "law": ("I often work with lawyers like {company} on structuring.",
+            "I often work with private-client lawyers on structuring."),
+    "tax": ("Tax expertise like {company}'s is just what our families need.",
+            "Cross-border tax is just what our families rely on."),
+    "investment": ("Common ground with the work you do at {company}.",
+                   "Lots of common ground with your wealth/investment work."),
+    "bd": ("Feels like real overlap with {company} worth exploring.",
+           "Feels like real overlap worth exploring."),
+    "philanthropy": ("Philanthropy features in many of our families' plans.",
+                     "Philanthropy features in many of our families' plans."),
+    "fx_payments": ("Our global clients often need FX/payments partners.",
+                    "Our global clients often need FX/payments partners."),
+    "immigration": ("Mobile families often need immigration counsel.",
+                    "Mobile families often need immigration counsel."),
+    "property": ("Our clients often ask about UK property.",
+                 "Our clients often ask about UK property."),
+    "jurisdiction": ("Your jurisdictional insight is invaluable to us.",
+                     "Your jurisdictional insight is invaluable to us."),
     "pr": ("Great to connect after a brilliant event.",
            "Great to connect after a brilliant event."),
-    "other": ("I really enjoyed the conversations and would value comparing notes.",
-              "I really enjoyed the conversations and would value comparing notes."),
+    "other": ("Really enjoyed the day — let's compare notes.",
+              "Really enjoyed the day — let's compare notes."),
 }
 
 
 def connection_message(role, segment, name, company):
     first = first_name(name)
     if role == "Host":
-        return (f"Hi {first}, thank you for a superb PCD London at Drapers' Hall "
-                f"— a privilege to present iOWN, wealth & business architecture for "
-                f"international families. Truly grateful for the platform and glad to "
-                f"connect. Best, Sergey")
+        return (f"Hi {first}, thank you for a superb PCD London — a privilege to "
+                f"present iOWN there. Grateful for the platform and glad to connect. "
+                f"Best, Sergey")
     if segment == "government":
-        return (f"Hi {first}, a real honour to share the room with you at the PCD "
-                f"London conference at Drapers' Hall, where I presented iOWN. I'd "
-                f"value staying connected. With respect, Sergey")
+        return (f"Hi {first}, an honour to share the room with you at PCD London, "
+                f"where I presented iOWN. I'd value staying connected. "
+                f"With respect, Sergey")
 
     with_co, plain = CLAUSES.get(segment, CLAUSES["other"])
     prefix = PREFIX.format(first=first)
@@ -383,7 +383,7 @@ def connection_message(role, segment, name, company):
         msg = f"{prefix} {clause}{SUFFIX}"
         if len(msg) <= LIMIT:
             return msg
-    return f"{prefix}{SUFFIX}"  # last resort
+    return f"{prefix}{SUFFIX}"  # last resort (still <= LIMIT)
 
 
 # ---------------------------------------------------------------------------
@@ -691,7 +691,7 @@ def main() -> None:
                 "17 June 2026\n\n")
         f.write("Grouped by priority band. For each person: open the search link, "
                 "click their profile, **Connect → Add a note**, paste the message. "
-                "Every note is within LinkedIn's 300-character limit.\n\n")
+                "Every note is within LinkedIn's 200-character limit (free accounts).\n\n")
         f.write("Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites "
                 "over several days.\n")
         for band in ("1A", "1B", "2", "3"):
@@ -725,14 +725,31 @@ def main() -> None:
     # 5) Compliant copy-paste accelerator (open in a browser)
     write_helper(rows)
 
+    # 6) Ready-to-send mail-merge CSV (only people whose email we have).
+    #    Column names match common Gmail/Outlook mail-merge add-ons (e.g. YAMM,
+    #    Mailmeteor): Email, First Name, Last Name, Company, Subject, Body.
+    mm = [r for r in rows if r["Email"]]
+    with (HERE / "mail_merge.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["Email", "First Name", "Last Name", "Company",
+                    "Subject", "Body"])
+        for r in mm:
+            parts = r["Name"].split()
+            last = " ".join(parts[1:]) if len(parts) > 1 else ""
+            w.writerow([r["Email"], r["First_Name"], last, r["Company"],
+                        r["Email_Subject"], r["Email_Body"]])
+
+    over = [r for r in rows if r["Msg_Len"] > LIMIT]
+    assert not over, f"Notes over {LIMIT}: {[r['Name'] for r in over]}"
+
     longest = max(rows, key=lambda r: r["Msg_Len"])
     counts = {b: sum(1 for r in rows if r["Band"] == b) for b in ("1A", "1B", "2", "3")}
     print(f"Wrote attendees_prioritized.csv, outreach_tracker.csv, "
-          f"connection_messages.md, top_targets.md, outreach_helper.html "
-          f"({len(rows)} contacts).")
+          f"connection_messages.md, top_targets.md, outreach_helper.html, "
+          f"mail_merge.csv ({len(rows)} contacts; {len(mm)} with email).")
     print(f"Band counts: {counts}")
     print(f"Longest LinkedIn note: {longest['Msg_Len']} chars ({longest['Name']}) "
-          f"[limit {LIMIT}]")
+          f"[limit {LIMIT}] — all within limit.")
 
 
 if __name__ == "__main__":

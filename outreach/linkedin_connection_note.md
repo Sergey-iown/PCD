@@ -1,36 +1,39 @@
 # LinkedIn connection notes — PCD London, 17 June 2026
 
-LinkedIn caps a connection-request note at **300 characters**, so keep it to one or
-two lines. Personalise `[First name]` (and the optional bracketed bits) before sending.
+LinkedIn caps a connection-request note at **200 characters** on free accounts
+(only Premium still allows 300). Keep it to one or two lines. Personalise
+`[First name]` (and the optional bracketed bits) before sending.
 
-> Tip: open the person's `LinkedIn_Search_URL` from `attendees.csv`, click their
-> profile, hit **Connect → Add a note**, paste, and personalise.
+> These are generic fallbacks. The **per-person** notes (already tailored and all
+> ≤200 chars) live in `connection_messages.md`, `attendees_prioritized.csv`, and the
+> `outreach_helper.html` "Copy note" button — use those first.
+
+> Tip: open the person's `LinkedIn_Search_URL`, click their profile, hit
+> **Connect → Add a note**, paste, and personalise.
 
 ---
 
-## Primary note (general — fits anyone) — 209 chars
-> Hi [First name], great to be among the PCD crowd at Drapers' Hall yesterday — I was
-> presenting iOWN (wealth & business architecture). Really enjoyed the conversations
-> and would love to stay connected. Best, Sergey
+## Primary note (general — fits anyone)
+> Hi [First name], good to be at PCD London where I presented iOWN (wealth & business
+> architecture). Really enjoyed it and would value connecting. Best, Sergey
 
-## For people you actually spoke with — 188 chars
-> Hi [First name], lovely to meet you at PCD London yesterday — I enjoyed our chat
-> [about X]. I was presenting iOWN. Let's keep the conversation going. Best, Sergey
+## For people you actually spoke with
+> Hi [First name], lovely to meet you at PCD London — I enjoyed our chat [about X].
+> I was presenting iOWN. Let's stay in touch. Best, Sergey
 
-## For people you didn't get to meet — 233 chars
-> Hi [First name], we were both at the PCD London conference at Drapers' Hall — sorry
-> we didn't get to meet in person. I was presenting iOWN (wealth & business architect)
-> and would value connecting here. Best, Sergey
+## For people you didn't get to meet
+> Hi [First name], we were both at PCD London — sorry we didn't meet. I was presenting
+> iOWN (wealth & business architect) and would value connecting. Best, Sergey
 
-## For the hosts (David Bell / Ken Chapman) — 196 chars
-> Hi [First name], thank you for a superb PCD London conference — a real pleasure to
-> present iOWN to that room at Drapers' Hall. Grateful for the platform and keen to
-> stay connected. Best, Sergey
+## For the hosts (David Bell / Ken Chapman)
+> Hi [First name], thank you for a superb PCD London — a pleasure to present iOWN there.
+> Grateful for the platform and keen to stay connected. Best, Sergey
 
 ---
 
 **Notes**
+- All four are under LinkedIn's 200-char limit (each is one line once the newlines
+  above are removed).
 - Sending without a note works too, but a personalised line lifts acceptance rates a lot.
-- Don't fire all ~143 at once — LinkedIn flags bursts. Spread them over several days
-  (a common rule of thumb is well under ~100 invites/week) and prioritise the people
-  you met and your highest-value targets first.
+- Don't fire all ~149 at once — LinkedIn flags bursts. Spread them over several days
+  (well under ~100 invites/week) and prioritise the people you met and your top targets.

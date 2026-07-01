@@ -17,6 +17,7 @@ badge, their email/phone from the card, and are promoted to Tier 1A.
 | `attendees_prioritized.csv` | All 149 contacts, banded 1A → 3, with MET flag, email/phone (where known), a personalised LinkedIn note, a personalised email opener, a segment, a "why" reason, and a one-click LinkedIn search link. |
 | `connection_messages.md` | The personalised LinkedIn notes grouped by band — open, click search link, **Connect → Add a note**, paste. |
 | `outreach_tracker.csv` | Working tracker (band + ready message + email opener + status columns) — mark Connected / Note sent / Email sent / Replied. |
+| `mail_merge.csv` | **Ready-to-send.** The people whose email you have (currently the 14 you met), one row each: Email, First/Last Name, Company, Subject, Body — column names match Gmail/Outlook mail-merge add-ons (YAMM, Mailmeteor). Import and send in one pass. |
 | `greetings_email.md` | Post-event greetings email draft (subject + body + variants); drop a per-person `Email_Opener` in after the salutation. |
 | `linkedin_connection_note.md` | Generic note templates (reference; `connection_messages.md` is the per-person version). |
 | `generate_outreach.py` | Source script that builds the CSVs + messages (re-run to regenerate). |
@@ -98,4 +99,5 @@ way to get an account restricted or banned. Use the helper + spread invites over
 python3 generate_outreach.py
 ```
 Edit the `ATTENDEES` list, the `classify()` rules, or the message `CLAUSES` in the
-script, then re-run. The script validates every note against the 300-char limit.
+script, then re-run. The script validates every note against LinkedIn's 200-char limit
+(free accounts; Premium allows 300) and fails loudly if any note is over.
