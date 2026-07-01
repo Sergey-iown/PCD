@@ -446,6 +446,24 @@ def email_opener(segment, company):
     return template.format(company=company)
 
 
+# Full greetings email (subject + body) for the one-click "Compose email"
+# mailto link. Edit EMAIL_SUBJECT / EMAIL_SIGNATURE to taste.
+EMAIL_SUBJECT = "Great to connect at PCD London"
+EMAIL_SIGNATURE = "With best wishes,\n\nSergey Bezborodov\nFounder & CEO, iOWN"
+
+
+def email_body(name, segment, company):
+    first = first_name(name)
+    return (
+        f"Dear {first},\n\n"
+        f"{email_opener(segment, company)}\n\n"
+        "I've also sent you a connection request on LinkedIn so we can stay in "
+        "touch. If you'd ever like to continue the conversation over a call or "
+        "coffee, I'd be delighted — just reply to this note and we'll find a time.\n\n"
+        f"{EMAIL_SIGNATURE}"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Score Tier-1 contacts to trim a tight "Tier 1A" of top targets.
 # ---------------------------------------------------------------------------
@@ -512,7 +530,8 @@ HELPER_HTML = """<!DOCTYPE html>
  .msg{background:#f0f2f5;border-radius:6px;padding:9px 11px;margin:9px 0;font-size:13.5px;white-space:pre-wrap}
  .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
  button,a.btn{font:inherit;font-size:13px;border:none;border-radius:6px;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-block}
- .copy{background:#0a66c2;color:#fff}.copy.email{background:#1a7f37}.copy.addr{background:#7a3ea0}
+ .copy{background:#0a66c2;color:#fff}.copy.email{background:#1a7f37}
+ a.btn.compose{background:#1a7f37;color:#fff}
  .open{background:#e4e6eb;color:#050505}
  .chk{margin-left:auto;font-size:13px;color:#444;user-select:none}
  .count{color:#dbe9fb;margin-left:auto}
@@ -551,7 +570,10 @@ function render(){
   if(q && !(p.name+' '+p.company).toLowerCase().includes(q)) continue;
   shown++;
   const contact=[p.emailaddr,p.phone].filter(Boolean).join(' · ');
-  const mailBtn=p.emailaddr?`<button class="copy addr" data-c="addr">Copy email address</button>`:'';
+  const mailto=p.emailaddr?`mailto:${encodeURIComponent(p.emailaddr)}?subject=${encodeURIComponent(p.subject)}&body=${encodeURIComponent(p.body)}`:'';
+  const emailBtn=p.emailaddr
+    ? `<a class="btn compose" href="${mailto}">✉️ Compose email ↗</a>`
+    : `<button class="copy email" data-c="opener">Copy email opener</button>`;
   const card=el(`<div class="card ${store[p.id]?'done':''}">
    <div class="top"><span><span class="name">${p.name}</span>
      <span class="badge b${p.band}">${p.band}</span>${p.met?'<span class="badge met">MET</span>':''}
@@ -559,15 +581,13 @@ function render(){
      ${contact?`<div class="meta">📇 ${contact}</div>`:''}</span></div>
    <div class="msg">${p.msg}</div>
    <div class="actions">
-     <button class="copy" data-c="msg">Copy note</button>
-     <button class="copy email" data-c="opener">Copy email opener</button>
-     ${mailBtn}
-     <a class="btn open" href="${p.url}" target="_blank" rel="noopener">Open profile search ↗</a>
+     <button class="copy li" data-c="li">Copy note & open LinkedIn ↗</button>
+     ${emailBtn}
      <label class="chk"><input type="checkbox" ${store[p.id]?'checked':''} data-done> done</label>
    </div></div>`);
-  card.querySelector('[data-c="msg"]').onclick=()=>copy(p.msg, card.querySelector('[data-c="msg"]'),'Copy note');
-  card.querySelector('[data-c="opener"]').onclick=()=>copy(p.opener, card.querySelector('[data-c="opener"]'),'Copy email opener');
-  if(p.emailaddr) card.querySelector('[data-c="addr"]').onclick=()=>copy(p.emailaddr, card.querySelector('[data-c="addr"]'),'Copy email address');
+  card.querySelector('[data-c="li"]').onclick=()=>{window.open(p.url,'_blank','noopener');copy(p.msg, card.querySelector('[data-c="li"]'),'Copy note & open LinkedIn ↗');};
+  const op=card.querySelector('[data-c="opener"]');
+  if(op) op.onclick=()=>copy(p.opener, op,'Copy email opener');
   card.querySelector('[data-done]').onchange=(e)=>{store[p.id]=e.target.checked;save();render();};
   list.appendChild(card);
  }
@@ -586,6 +606,7 @@ def write_helper(rows):
         "company": r["Company"], "country": r["Country"], "band": r["Band"],
         "met": bool(r.get("Met")), "msg": r["Connection_Message"],
         "opener": r["Email_Opener"], "emailaddr": r["Email"], "phone": r["Phone"],
+        "subject": r["Email_Subject"], "body": r["Email_Body"],
         "url": r["LinkedIn_Search_URL"],
     } for r in rows]
     html = HELPER_HTML.replace("__DATA__", json.dumps(data, ensure_ascii=False))
@@ -610,6 +631,8 @@ def main() -> None:
             "Priority_Reason": reason,
             "Connection_Message": connection_message(role, seg, name, company),
             "Email_Opener": email_opener(seg, company),
+            "Email_Subject": EMAIL_SUBJECT,
+            "Email_Body": email_body(name, seg, company),
             "Msg_Len": len(connection_message(role, seg, name, company)),
             "_score": target_score(seg, position, country) + (100 if met else 0),
             "LinkedIn_Search_URL": linkedin_search_url(name, company),
@@ -636,7 +659,8 @@ def main() -> None:
     # 1) Prioritised master CSV
     cols = ["Band", "Tier", "Met", "Name", "First_Name", "Position", "Company",
             "Country", "Role", "Email", "Phone", "Segment", "Priority_Reason",
-            "Connection_Message", "Email_Opener", "LinkedIn_Search_URL"]
+            "Connection_Message", "Email_Opener", "Email_Subject", "Email_Body",
+            "LinkedIn_Search_URL"]
     with (HERE / "attendees_prioritized.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
