@@ -57,7 +57,7 @@ ATTENDEES = [
     ("Dan Amroussi", "Associate", "Stewarts", "United Kingdom", "Guest"),
     ("David Kilshaw", "Head of Private Client Wealth Solutions", "Rothschild & Co", "United Kingdom", "Guest"),
     ("David Sussman", "Senior Director - Private Capital Services", "JTC", "Jersey", "Guest"),
-    ("Dennis Philips", "Partner, Private Client", "Morr & Co", "United Kingdom", "Guest"),
+    ("Dennis Phillips", "Partner, Private Client", "Morr & Co", "United Kingdom", "Guest"),
     ("Derek Baglietto", "Senior Relationship Manager", "Turicum Private Bank", "Gibraltar", "Guest"),
     ("Dilip Varma", "Chairman and CEO", "Everest Data Centre", "United Kingdom", "Guest"),
     ("Dominic Wertheimer", "Director", "Lornham Property", "United Kingdom", "Guest"),
@@ -168,7 +168,35 @@ ATTENDEES = [
     ("Tom Rutherford", "Director", "LOTUC Consulting Ltd", "United Kingdom", "Guest"),
     ("Victoria Younghusband", "Partner", "M.B.KEMP LLP", "United Kingdom", "Guest"),
     ("Vitorine Bajada", "Partner Lawyer", "Dingli & Dingli Law Firm", "Malta", "Guest"),
+    # --- Added from business cards collected at the event (not on the printed list) ---
+    ("Tim Pearson-Burton", "Director", "Linvia Group", "Monaco", "Guest"),
+    ("James Carroll", "Aircraft Sales & Acquisitions, EMEA & Asia", "Duncan Aviation", "United Kingdom", "Guest"),
+    ("Cecilia Weng Song", "Private Client Manager, Giving & Impact Services", "Charities Aid Foundation (CAF)", "United Kingdom", "Guest"),
+    ("Peter Ahluwalia", "Co-Founder & Partner, Head of Active Strategies", "LeoVest Partners AG", "Switzerland", "Guest"),
+    ("Eric Lord", "Registered Representative", "Texture Capital", "United States", "Guest"),
+    ("Lionel Freitas", "Contact (Dixcart Portugal)", "Dixcart Portugal Lda", "Portugal", "Guest"),
 ]
+
+# People you met in person (from business cards). They get a MET badge, are
+# promoted to Tier 1A, and carry email/phone where the card showed them.
+# (name: (email, phone)). Name must match the entry in ATTENDEES exactly.
+CONTACT_DETAILS = {
+    "Guillaume Grisel": ("guillaume.grisel@swlegal.ch", "+41 22 707 8000"),
+    "Lee Penrose": ("lee@sandstone.tax", ""),
+    "Atef Elmarakby": ("atef.elmarakby@goodlawintl.com", "+44 20 7139 9255"),
+    "Ali Stennett": ("ali@conexus.im", "+44 7624 225083"),
+    "Richard Steele": ("richard.steele@isio.com", "+44 7920 637876"),
+    "Dennis Phillips": ("dennis.phillips@morrlaw.com", "+44 20 8971 1050"),
+    "Derek Baglietto": ("derek.baglietto@turicum.com", "+350 200 441144"),
+    "Stuart Dalmedo": ("stuart.dalmedo@isolas.gi", "+350 2000 1892"),
+    "Tim Pearson-Burton": ("tburton@linviagroup.com", "+377 97 97 82 00"),
+    "James Carroll": ("james.carroll@duncanaviation.com", "+44 7411 534053"),
+    "Cecilia Weng Song": ("cawengsong@cafonline.org", "+44 3000 123342"),
+    "Peter Ahluwalia": ("peter.ahluwalia@leovest.com", "+41 58 513 89 97"),
+    "Eric Lord": ("eric@texture.capital", "+1 513 463 7371"),
+    "Lionel Freitas": ("lionel.freitas@dixcart.com", "+351 291 225019"),
+}
+MET = set(CONTACT_DETAILS)
 
 
 def linkedin_search_url(name: str, company: str) -> str:
@@ -222,12 +250,13 @@ def classify(position: str, company: str) -> str:
 
     fiduciary = ["jtc", "suntera", "tmf", "oak group", "coriats", "abacus",
                  "hfl", "stonewell", "fidux", "obbard", "alexanders", "hkcs",
-                 "conexus", "csc global", "group eleven"]
+                 "conexus", "csc global", "group eleven", "dixcart"]
     if (any(f in c for f in fiduciary) or "trust" in p or "fiduciary" in p
             or ("corporate" in p and "service" in p)):
         return "trust_fiduciary"
 
-    if "philanthropic" in c or "gift fund" in c:
+    if ("philanthropic" in c or "gift fund" in c or "charities aid" in c
+            or "giving" in p or "impact services" in p):
         return "philanthropy"
     if "ebury" in c or "currency" in c:
         return "fx_payments"
@@ -238,7 +267,7 @@ def classify(position: str, company: str) -> str:
 
     invest = ["sarasin", "charles stanley", "james hambro", "longview",
               "luxury capital", "oakcean", "arc & co", "isio", "hampden capital",
-              "capital international", "birchin lane"]
+              "capital international", "birchin lane", "leovest", "texture capital"]
     if (any(w in c for w in invest)
             or any(k in p for k in ["investment manager", "portfolio manager",
                                     "wealth", "private office", "international wealth"])):
@@ -483,7 +512,7 @@ HELPER_HTML = """<!DOCTYPE html>
  .msg{background:#f0f2f5;border-radius:6px;padding:9px 11px;margin:9px 0;font-size:13.5px;white-space:pre-wrap}
  .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
  button,a.btn{font:inherit;font-size:13px;border:none;border-radius:6px;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-block}
- .copy{background:#0a66c2;color:#fff}.copy.email{background:#1a7f37}
+ .copy{background:#0a66c2;color:#fff}.copy.email{background:#1a7f37}.copy.addr{background:#7a3ea0}
  .open{background:#e4e6eb;color:#050505}
  .chk{margin-left:auto;font-size:13px;color:#444;user-select:none}
  .count{color:#dbe9fb;margin-left:auto}
@@ -521,19 +550,24 @@ function render(){
   if(hide && store[p.id]) continue;
   if(q && !(p.name+' '+p.company).toLowerCase().includes(q)) continue;
   shown++;
+  const contact=[p.emailaddr,p.phone].filter(Boolean).join(' · ');
+  const mailBtn=p.emailaddr?`<button class="copy addr" data-c="addr">Copy email address</button>`:'';
   const card=el(`<div class="card ${store[p.id]?'done':''}">
    <div class="top"><span><span class="name">${p.name}</span>
      <span class="badge b${p.band}">${p.band}</span>${p.met?'<span class="badge met">MET</span>':''}
-     <div class="meta">${p.position?p.position+' · ':''}${p.company} · ${p.country}</div></span></div>
+     <div class="meta">${p.position?p.position+' · ':''}${p.company} · ${p.country}</div>
+     ${contact?`<div class="meta">📇 ${contact}</div>`:''}</span></div>
    <div class="msg">${p.msg}</div>
    <div class="actions">
      <button class="copy" data-c="msg">Copy note</button>
-     <button class="copy email" data-c="email">Copy email opener</button>
+     <button class="copy email" data-c="opener">Copy email opener</button>
+     ${mailBtn}
      <a class="btn open" href="${p.url}" target="_blank" rel="noopener">Open profile search ↗</a>
      <label class="chk"><input type="checkbox" ${store[p.id]?'checked':''} data-done> done</label>
    </div></div>`);
   card.querySelector('[data-c="msg"]').onclick=()=>copy(p.msg, card.querySelector('[data-c="msg"]'),'Copy note');
-  card.querySelector('[data-c="email"]').onclick=()=>copy(p.email, card.querySelector('[data-c="email"]'),'Copy email opener');
+  card.querySelector('[data-c="opener"]').onclick=()=>copy(p.opener, card.querySelector('[data-c="opener"]'),'Copy email opener');
+  if(p.emailaddr) card.querySelector('[data-c="addr"]').onclick=()=>copy(p.emailaddr, card.querySelector('[data-c="addr"]'),'Copy email address');
   card.querySelector('[data-done]').onchange=(e)=>{store[p.id]=e.target.checked;save();render();};
   list.appendChild(card);
  }
@@ -551,7 +585,8 @@ def write_helper(rows):
         "id": r["Name"], "name": r["Name"], "position": r["Position"],
         "company": r["Company"], "country": r["Country"], "band": r["Band"],
         "met": bool(r.get("Met")), "msg": r["Connection_Message"],
-        "email": r["Email_Opener"], "url": r["LinkedIn_Search_URL"],
+        "opener": r["Email_Opener"], "emailaddr": r["Email"], "phone": r["Phone"],
+        "url": r["LinkedIn_Search_URL"],
     } for r in rows]
     html = HELPER_HTML.replace("__DATA__", json.dumps(data, ensure_ascii=False))
     (HERE / "outreach_helper.html").write_text(html, encoding="utf-8")
@@ -563,36 +598,45 @@ def main() -> None:
         seg = "host" if role == "Host" else classify(position, company)
         level = seniority(position)
         tier, reason = tier_and_reason(role, seg, level)
+        met = name in MET
+        email, phone = CONTACT_DETAILS.get(name, ("", ""))
+        if met:
+            reason = "MET IN PERSON — " + reason
         rows.append({
             "Name": name, "First_Name": first_name(name), "Position": position,
             "Company": company, "Country": country, "Role": role,
+            "Met": "Y" if met else "", "Email": email, "Phone": phone,
             "Tier": tier, "_seg": seg, "Segment": SEGMENT_LABEL[seg],
             "Priority_Reason": reason,
             "Connection_Message": connection_message(role, seg, name, company),
             "Email_Opener": email_opener(seg, company),
             "Msg_Len": len(connection_message(role, seg, name, company)),
-            "_score": target_score(seg, position, country),
+            "_score": target_score(seg, position, country) + (100 if met else 0),
             "LinkedIn_Search_URL": linkedin_search_url(name, company),
         })
 
     # Band the Tier-1 group: top TOP_TARGET_COUNT by score => "1A", rest "1B".
+    # Anyone met in person is promoted straight to 1A regardless of tier.
     tier1 = sorted((r for r in rows if r["Tier"] == 1),
                    key=lambda r: (-r["_score"], r["Name"]))
     top_ids = {id(r) for r in tier1[:TOP_TARGET_COUNT]}
     for r in rows:
-        if r["Tier"] == 1:
-            r["Band"] = "1A" if id(r) in top_ids else "1B"
+        if r["Met"] or id(r) in top_ids:
+            r["Band"] = "1A"
+        elif r["Tier"] == 1:
+            r["Band"] = "1B"
         else:
             r["Band"] = str(r["Tier"])
 
     rows.sort(key=lambda r: (BAND_RANK[r["Band"]],
+                             0 if r["Met"] else 1,
                              0 if r["Role"] == "Host" else 1,
                              -r["_score"], r["Name"]))
 
     # 1) Prioritised master CSV
-    cols = ["Band", "Tier", "Name", "First_Name", "Position", "Company", "Country",
-            "Role", "Segment", "Priority_Reason", "Connection_Message",
-            "Email_Opener", "LinkedIn_Search_URL"]
+    cols = ["Band", "Tier", "Met", "Name", "First_Name", "Position", "Company",
+            "Country", "Role", "Email", "Phone", "Segment", "Priority_Reason",
+            "Connection_Message", "Email_Opener", "LinkedIn_Search_URL"]
     with (HERE / "attendees_prioritized.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
@@ -601,13 +645,14 @@ def main() -> None:
     # 2) Working tracker (with band + ready message + email opener)
     with (HERE / "outreach_tracker.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["Band", "Name", "Company", "Country", "Segment",
-                    "Connection_Message", "Email_Opener", "LinkedIn_Search_URL",
-                    "Connected (Y/N)", "Note_Sent (Y/N)", "Email_Sent (Y/N)",
-                    "Replied (Y/N)", "Notes"])
+        w.writerow(["Band", "Met", "Name", "Company", "Country", "Email", "Phone",
+                    "Segment", "Connection_Message", "Email_Opener",
+                    "LinkedIn_Search_URL", "Connected (Y/N)", "Note_Sent (Y/N)",
+                    "Email_Sent (Y/N)", "Replied (Y/N)", "Notes"])
         for r in rows:
-            w.writerow([r["Band"], r["Name"], r["Company"], r["Country"],
-                        r["Segment"], r["Connection_Message"], r["Email_Opener"],
+            w.writerow([r["Band"], r["Met"], r["Name"], r["Company"], r["Country"],
+                        r["Email"], r["Phone"], r["Segment"],
+                        r["Connection_Message"], r["Email_Opener"],
                         r["LinkedIn_Search_URL"], "", "", "", "", ""])
 
     # 3) Copy-paste sheet, grouped by band
@@ -644,8 +689,12 @@ def main() -> None:
                 "`greetings_email.md`).\n\n")
         for i, r in enumerate(top, 1):
             pos = f"{r['Position']}, " if r["Position"] else ""
-            f.write(f"### {i}. {r['Name']} — {pos}{r['Company']} ({r['Country']})\n")
+            met = " ✅ **MET IN PERSON**" if r["Met"] else ""
+            f.write(f"### {i}. {r['Name']} — {pos}{r['Company']} ({r['Country']}){met}\n")
             f.write(f"*{r['Priority_Reason']}* · [LinkedIn search]({r['LinkedIn_Search_URL']})\n\n")
+            if r["Email"] or r["Phone"]:
+                bits = " · ".join(x for x in (r["Email"], r["Phone"]) if x)
+                f.write(f"**Contact:** {bits}\n\n")
             f.write(f"**LinkedIn note:** {r['Connection_Message']}\n\n")
             f.write(f"**Email opener:** {r['Email_Opener']}\n\n")
 

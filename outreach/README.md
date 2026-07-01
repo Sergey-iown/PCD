@@ -4,13 +4,17 @@ Outreach materials for following up with attendees of the **PCD London Conferenc
 (Drapers' Hall, City of London — Wednesday, 17 June 2026), where Sergey Bezborodov
 presented **iOWN** (wealth & business architecture for international families).
 
+**149 contacts** in total: the 143 from the printed guest list plus **6 added from
+business cards** collected at the event. **14 people you met in person** carry a MET
+badge, their email/phone from the card, and are promoted to Tier 1A.
+
 ## What's here
 
 | File | What it is |
 |------|------------|
 | `outreach_helper.html` | **Open this in a browser.** A copy-paste accelerator: filter/search the list, one click to copy a person's note (or email opener), one click to open their LinkedIn search tab; remembers who you've done. *You* press Connect/Send — see "automation" below. |
-| `top_targets.md` | The ~25 highest-value contacts (Tier 1A), each with its personalised LinkedIn note **and** email opener. Do these first. |
-| `attendees_prioritized.csv` | All 143 contacts, banded 1A → 3, each with a personalised LinkedIn note, a personalised email opener, a segment, a "why" reason, and a one-click LinkedIn search link. |
+| `top_targets.md` | The highest-value contacts (Tier 1A), each with its personalised LinkedIn note **and** email opener, plus card email/phone for the people you met. Do these first. |
+| `attendees_prioritized.csv` | All 149 contacts, banded 1A → 3, with MET flag, email/phone (where known), a personalised LinkedIn note, a personalised email opener, a segment, a "why" reason, and a one-click LinkedIn search link. |
 | `connection_messages.md` | The personalised LinkedIn notes grouped by band — open, click search link, **Connect → Add a note**, paste. |
 | `outreach_tracker.csv` | Working tracker (band + ready message + email opener + status columns) — mark Connected / Note sent / Email sent / Replied. |
 | `greetings_email.md` | Post-event greetings email draft (subject + body + variants); drop a per-person `Email_Opener` in after the salutation. |
@@ -23,18 +27,21 @@ iOWN is a Swiss *wealth & business architect* serving international/HNW families
 their advisers, so contacts are scored by how directly they can **refer business or
 partner**:
 
-- **Tier 1A — top targets (25):** the trimmed shortlist. Tier-1 contacts ranked by
-  seniority (founders, CEOs, heads, partners), segment fit, and jurisdiction (Swiss /
-  Monaco / Channel Islands / IoM / Gibraltar / Bermuda wealth hubs), plus the hosts.
-  **Start here** — see `top_targets.md`.
-- **Tier 1B — priority (46):** the rest of the senior referral sources / decision-
+- **Tier 1A — top targets (31):** everyone you **met in person** (all 14 cards), plus
+  the trimmed shortlist of Tier-1 contacts ranked by seniority (founders, CEOs, heads,
+  partners), segment fit, and jurisdiction (Swiss / Monaco / Channel Islands / IoM /
+  Gibraltar / Bermuda wealth hubs), plus the hosts. **Start here** — see `top_targets.md`.
+- **Tier 1B — priority (47):** the rest of the senior referral sources / decision-
   makers at the core segments (private banking, trust & fiduciary, private-client law,
   private-client tax, wealth & investment).
-- **Tier 2 — relevant (63):** juniors at those same firms (longer nurture) and
+- **Tier 2 — relevant (62):** juniors at those same firms (longer nurture) and
   adjacent services — business development, philanthropy, FX/payments, immigration,
   property, and jurisdiction-promotion bodies.
 - **Tier 3 — long tail (9):** government/diplomatic (relationship, not commercial),
   PR, and hard-to-place firms. Connect when you have time.
+
+People you met in person are always promoted to 1A (they sort first, above the badge),
+regardless of their firm/title score.
 
 Banding is a heuristic from each person's title + firm + country — feel free to
 re-rank in the CSV, or change `TOP_TARGET_COUNT` / the scoring in the script and

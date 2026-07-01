@@ -4,23 +4,71 @@ Grouped by priority band. For each person: open the search link, click their pro
 
 Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several days.
 
-## Tier 1A — TOP TARGETS (start here: ~25 highest-value, do first)  (25)
+## Tier 1A — TOP TARGETS (start here: ~25 highest-value, do first)  (31)
+
+- **Peter Ahluwalia** — Co-Founder & Partner, Head of Active Strategies, LeoVest Partners AG (Switzerland)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Peter+Ahluwalia+LeoVest+Partners+AG)  
+  > Hi Peter, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Lots of common ground with the wealth and investment work at LeoVest Partners AG. Let's stay connected. Best, Sergey
+
+- **Ali Stennett** — Managing Director, Conexus Limited (Isle of Man)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Ali+Stennett+Conexus+Limited)  
+  > Hi Ali, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. We work closely with fiduciary teams like Conexus Limited on cross-border structures. Let's stay connected. Best, Sergey
+
+- **Guillaume Grisel** — Partner, Schellenberg Wittmer (Switzerland)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Guillaume+Grisel+Schellenberg+Wittmer)  
+  > Hi Guillaume, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as Schellenberg Wittmer on international structuring. Let's stay connected. Best, Sergey
+
+- **Lee Penrose** — Head of Strategic Development, Sandstone Tax (Isle of Man)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Lee+Penrose+Sandstone+Tax)  
+  > Hi Lee, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Cross-border tax expertise like Sandstone Tax's is exactly what our families rely on. Let's stay connected. Best, Sergey
+
+- **Atef Elmarakby** — Managing Partner, GOOD LAW INTL (United Kingdom)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Atef+Elmarakby+GOOD+LAW+INTL)  
+  > Hi Atef, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as GOOD LAW INTL on international structuring. Let's stay connected. Best, Sergey
+
+- **Stuart Dalmedo** — Partner, ISOLAS LLP (Gibraltar)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Stuart+Dalmedo+ISOLAS+LLP)  
+  > Hi Stuart, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as ISOLAS LLP on international structuring. Let's stay connected. Best, Sergey
+
+- **Dennis Phillips** — Partner, Private Client, Morr & Co (United Kingdom)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Dennis+Phillips+Morr+%26+Co)  
+  > Hi Dennis, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as Morr & Co on international structuring. Let's stay connected. Best, Sergey
+
+- **Derek Baglietto** — Senior Relationship Manager, Turicum Private Bank (Gibraltar)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Derek+Baglietto+Turicum+Private+Bank)  
+  > Hi Derek, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Trusted private bankers like those at Turicum Private Bank matter hugely to the families we serve. Let's stay connected. Best, Sergey
+
+- **Richard Steele** — Director, Isio Private Office (United Kingdom)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Richard+Steele+Isio+Private+Office)  
+  > Hi Richard, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Lots of common ground with the wealth and investment work at Isio Private Office. Let's stay connected. Best, Sergey
+
+- **Tim Pearson-Burton** — Director, Linvia Group (Monaco)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Tim+Pearson-Burton+Linvia+Group)  
+  > Hi Tim, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I really enjoyed the conversations and would value comparing notes. Let's stay connected. Best, Sergey
+
+- **Eric Lord** — Registered Representative, Texture Capital (United States)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Eric+Lord+Texture+Capital)  
+  > Hi Eric, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Lots of common ground with the wealth and investment work at Texture Capital. Let's stay connected. Best, Sergey
+
+- **Lionel Freitas** — Contact (Dixcart Portugal), Dixcart Portugal Lda (Portugal)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Lionel+Freitas+Dixcart+Portugal+Lda)  
+  > Hi Lionel, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. We work closely with fiduciary teams like Dixcart Portugal Lda on cross-border structures. Let's stay connected. Best, Sergey
+
+- **Cecilia Weng Song** — Private Client Manager, Giving & Impact Services, Charities Aid Foundation (CAF) (United Kingdom)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Cecilia+Weng+Song+Charities+Aid+Foundation+%28CAF%29)  
+  > Hi Cecilia, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Philanthropy is close to many of our families' plans — I'd love to hear more about Charities Aid Foundation (CAF). Let's stay connected. Best, Sergey
+
+- **James Carroll** — Aircraft Sales & Acquisitions, EMEA & Asia, Duncan Aviation (United Kingdom)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=James+Carroll+Duncan+Aviation)  
+  > Hi James, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Feels like real overlap between iOWN and Duncan Aviation worth exploring. Let's stay connected. Best, Sergey
 
 - **David Bell** — Founder, PCD (United Kingdom)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=David+Bell+PCD)  
   > Hi David, thank you for a superb PCD London at Drapers' Hall — a privilege to present iOWN, wealth & business architecture for international families. Truly grateful for the platform and glad to connect. Best, Sergey
 
-- **Ken Chapman** — Director, Birchin Lane Wealth Advisory (United Kingdom)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Ken+Chapman+Birchin+Lane+Wealth+Advisory)  
-  > Hi Ken, thank you for a superb PCD London at Drapers' Hall — a privilege to present iOWN, wealth & business architecture for international families. Truly grateful for the platform and glad to connect. Best, Sergey
-
 - **James Watlington** — Founder & Chairman, Alexanders Bermuda (Bermuda)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=James+Watlington+Alexanders+Bermuda)  
   > Hi James, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. We work closely with fiduciary teams like Alexanders Bermuda on cross-border structures. Let's stay connected. Best, Sergey
-
-- **Ali Stennett** — Managing Director, Conexus Limited (Isle of Man)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Ali+Stennett+Conexus+Limited)  
-  > Hi Ali, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. We work closely with fiduciary teams like Conexus Limited on cross-border structures. Let's stay connected. Best, Sergey
 
 - **Andrea Vicari** — Founder, VicariAvvocati (Italy)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Andrea+Vicari+VicariAvvocati)  
@@ -46,10 +94,6 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Elvira+Verdin+Julius+Baer)  
   > Hi Elvira, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Trusted private bankers like those at Julius Baer matter hugely to the families we serve. Let's stay connected. Best, Sergey
 
-- **Guillaume Grisel** — Partner, Schellenberg Wittmer (Switzerland)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Guillaume+Grisel+Schellenberg+Wittmer)  
-  > Hi Guillaume, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as Schellenberg Wittmer on international structuring. Let's stay connected. Best, Sergey
-
 - **Irene Morrison** — Head of Client Development, Cains (Isle of Man)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Irene+Morrison+Cains)  
   > Hi Irene, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as Cains on international structuring. Let's stay connected. Best, Sergey
@@ -57,10 +101,6 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
 - **James Fleming** — Chairman, Arc & Co. (United Kingdom)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=James+Fleming+Arc+%26+Co.)  
   > Hi James, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Lots of common ground with the wealth and investment work at Arc & Co.. Let's stay connected. Best, Sergey
-
-- **Lee Penrose** — Head of Strategic Development, Sandstone Tax (Isle of Man)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Lee+Penrose+Sandstone+Tax)  
-  > Hi Lee, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Cross-border tax expertise like Sandstone Tax's is exactly what our families rely on. Let's stay connected. Best, Sergey
 
 - **Mark Watson** — Head of Private Client Market Strategy, CSC Global (Guernsey)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Mark+Watson+CSC+Global)  
@@ -86,13 +126,16 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Adrian+Pilcher+ISOLAS+LLP)  
   > Hi Adrian, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as ISOLAS LLP on international structuring. Let's stay connected. Best, Sergey
 
-- **Atef Elmarakby** — Managing Partner, GOOD LAW INTL (United Kingdom)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Atef+Elmarakby+GOOD+LAW+INTL)  
-  > Hi Atef, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as GOOD LAW INTL on international structuring. Let's stay connected. Best, Sergey
-
 - **Graeme Privett** — Partner, Head of Private Client Tax, HaysMac LLP (United Kingdom)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Graeme+Privett+HaysMac+LLP)  
   > Hi Graeme, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Cross-border tax expertise like HaysMac LLP's is exactly what our families rely on. Let's stay connected. Best, Sergey
+
+
+## Tier 1B — priority (other senior referral sources / decision-makers)  (47)
+
+- **Ken Chapman** — Director, Birchin Lane Wealth Advisory (United Kingdom)  
+  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Ken+Chapman+Birchin+Lane+Wealth+Advisory)  
+  > Hi Ken, thank you for a superb PCD London at Drapers' Hall — a privilege to present iOWN, wealth & business architecture for international families. Truly grateful for the platform and glad to connect. Best, Sergey
 
 - **James Sturla** — Head of Private Client Business Development, Hampden Capital Plc (United Kingdom)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=James+Sturla+Hampden+Capital+Plc)  
@@ -105,9 +148,6 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
 - **Kate Ovenden** — Partner - Corporate, Appleby (Guernsey)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Kate+Ovenden+Appleby)  
   > Hi Kate, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as Appleby on international structuring. Let's stay connected. Best, Sergey
-
-
-## Tier 1B — priority (other senior referral sources / decision-makers)  (46)
 
 - **Kim Luce** — Head of Private Wealth, TMF Group (United Kingdom)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Kim+Luce+TMF+Group)  
@@ -128,10 +168,6 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
 - **Sharon Shimmin** — Head of Business Development, Capital International (United Kingdom)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Sharon+Shimmin+Capital+International)  
   > Hi Sharon, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Lots of common ground with the wealth and investment work at Capital International. Let's stay connected. Best, Sergey
-
-- **Stuart Dalmedo** — Partner, ISOLAS LLP (Gibraltar)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Stuart+Dalmedo+ISOLAS+LLP)  
-  > Hi Stuart, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as ISOLAS LLP on international structuring. Let's stay connected. Best, Sergey
 
 - **Tim Morgan** — Partner, Appleby (Jersey)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Tim+Morgan+Appleby)  
@@ -156,10 +192,6 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
 - **Chad Phillips** — Business Development Director, Suntera Global (Jersey)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Chad+Phillips+Suntera+Global)  
   > Hi Chad, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. We work closely with fiduciary teams like Suntera Global on cross-border structures. Let's stay connected. Best, Sergey
-
-- **Dennis Philips** — Partner, Private Client, Morr & Co (United Kingdom)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Dennis+Philips+Morr+%26+Co)  
-  > Hi Dennis, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I often collaborate with private-client lawyers such as Morr & Co on international structuring. Let's stay connected. Best, Sergey
 
 - **Edward Leigh** — Director – Private Capital Services, JTC (Isle of Man)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Edward+Leigh+JTC)  
@@ -277,10 +309,6 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Peter+Cheng+BDO+LLP)  
   > Hi Peter, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Cross-border tax expertise like BDO LLP's is exactly what our families rely on. Let's stay connected. Best, Sergey
 
-- **Richard Steele** — Director, Isio Private Office (United Kingdom)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Richard+Steele+Isio+Private+Office)  
-  > Hi Richard, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Lots of common ground with the wealth and investment work at Isio Private Office. Let's stay connected. Best, Sergey
-
 - **Tim Houghton** — Market Head, Channel Islands, TMF Group (Jersey)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Tim+Houghton+TMF+Group)  
   > Hi Tim, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. We work closely with fiduciary teams like TMF Group on cross-border structures. Let's stay connected. Best, Sergey
@@ -294,7 +322,7 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
   > Hi Andre, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Lots of common ground with the wealth and investment work at Oakcean Capital. Let's stay connected. Best, Sergey
 
 
-## Tier 2 — relevant (nurture, adjacent services, juniors at key firms)  (63)
+## Tier 2 — relevant (nurture, adjacent services, juniors at key firms)  (62)
 
 - **Michael Crowe** — CEO, Finance Isle of Man (Isle of Man)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Michael+Crowe+Finance+Isle+of+Man)  
@@ -319,10 +347,6 @@ Work top-down: **Tier 1A first**, then 1B, then 2. Spread invites over several d
 - **Cécile Civiale Vuillier** — Founding Partner, META OCTAV (Switzerland)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=C%C3%A9cile+Civiale+Vuillier+META+OCTAV)  
   > Hi Cécile, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. I really enjoyed the conversations and would value comparing notes. Let's stay connected. Best, Sergey
-
-- **Derek Baglietto** — Senior Relationship Manager, Turicum Private Bank (Gibraltar)  
-  [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Derek+Baglietto+Turicum+Private+Bank)  
-  > Hi Derek, great being among the PCD crowd at Drapers' Hall — I presented iOWN, wealth & business architecture for international families. Trusted private bankers like those at Turicum Private Bank matter hugely to the families we serve. Let's stay connected. Best, Sergey
 
 - **Dilip Varma** — Chairman and CEO, Everest Data Centre (United Kingdom)  
   [LinkedIn search](https://www.linkedin.com/search/results/people/?keywords=Dilip+Varma+Everest+Data+Centre)  
