@@ -315,12 +315,55 @@ def write_csv(people, path="participants.csv"):
     return path
 
 
+def esc(s):
+    return (str(s).replace("&", "&amp;").replace("<", "&lt;")
+            .replace(">", "&gt;").replace('"', "&quot;"))
+
+
+def card_html(p):
+    """One participant card, rendered here rather than in JavaScript.
+
+    The whole list has to be readable with scripting switched off (some file
+    viewers strip <script>), so the cards are real HTML and the big button is a
+    plain link to the LinkedIn search. JavaScript only adds the copy, the
+    filters, focus mode and the progress tracking on top.
+    """
+    notes = {t: note(p["greet"], p["cls"], t) for t in ("event", "after", "plain")}
+    find = " ".join(x for x in [p["name"], p["based"], p["alt"] or ""] if x).lower()
+    alt_btn = (f'<a class="btn alt" href="{p["liAlt"]}" target="_blank" rel="noopener">'
+               f'{esc(p["alt"])}</a>') if p["alt"] else ""
+    return f"""<article class="card" data-no="{p['no']}" data-cls="{p['cls']}" data-gap="{p['gap']}"
+ data-ctry="{esc(p['based'])}" data-find="{esc(find)}" data-sortname="{esc(p['name'])}"
+ data-name="{esc(p['name'])}" data-study="{esc(p['study'])}" data-current="{esc(p['current'])}">
+ <div><span class="name">{esc(p['name'])}</span>{'<span class="tag">SAME CLASS</span>' if p['same'] else ''}
+  <div class="meta">Class of {p['cls']} · {esc(p['study'] or '—')}{' → now ' + esc(p['current']) if p['current'] else ''} · #{p['no']}</div></div>
+ <div class="msg"><span class="len">{len(notes['event'])}/200</span><span class="note-text"
+  data-event="{esc(notes['event'])}" data-after="{esc(notes['after'])}"
+  data-plain="{esc(notes['plain'])}">{esc(notes['event'])}</span></div>
+ <div class="actions">
+  <a class="btn go" href="{p['liLeiden']}" target="_blank" rel="noopener">Copy note &amp; open LinkedIn ↗</a>
+  <a class="btn alt" href="{p['liName']}" target="_blank" rel="noopener">name only</a>
+  {alt_btn}
+  <a class="btn alt" href="{p['google']}" target="_blank" rel="noopener">Google</a>
+  <label class="chk jsonly"><input type="checkbox" data-done> done</label>
+ </div></article>"""
+
+
 def write_html(people, path="leiden_connect.html"):
     with open("template.html", encoding="utf-8") as fh:
         tpl = fh.read()
-    payload = json.dumps(people, ensure_ascii=False, separators=(",", ":"))
+    # default order = the default sort: nearest classes to mine first
+    ordered = sorted(people, key=lambda p: (p["gap"], p["no"]))
+    classes = "".join(f'<option value="{c}">Class of {c}</option>'
+                      for c in sorted({p["cls"] for p in people}))
+    countries = "".join(f'<option value="{esc(c)}">{esc(c)}</option>'
+                        for c in sorted({p["based"] for p in people if p["based"]}))
+    html = (tpl.replace("<!--CARDS-->", "\n".join(card_html(p) for p in ordered))
+               .replace("<!--CLASSES-->", classes)
+               .replace("<!--COUNTRIES-->", countries)
+               .replace("<!--COUNT-->", str(len(people))))
     with open(path, "w", encoding="utf-8") as fh:
-        fh.write(tpl.replace("/*DATA*/", payload))
+        fh.write(html)
     return path
 
 
