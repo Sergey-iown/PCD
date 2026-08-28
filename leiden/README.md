@@ -32,11 +32,36 @@ deliberately yours — see *Why it isn't automated* below.
 | **Note: at the event / after the event / neutral** | Switches the wording of every note. Use *at the event* on 28–29 August, *after the event* in the days following, *neutral* later on. |
 | **hide done** | On by default, so the list shrinks as you go. |
 | **Progress bar + "in the last 24h"** | Tracks how many invites you have fired today and warns past 20 — LinkedIn throttles roughly 100–200 invitations per week. |
-| **name only / Google** | Fallback searches for anyone the default search misses. For the three people who go by a second name (Sharon Huang, Jessica Chu, Alina Yaroshchuk) there is an extra button with the alternate name. |
+| **Search: name only / + Leiden / + tax** | Widens or narrows the main button for everyone at once. Default is name only. |
+| **+ Leiden / full name / Google / alternate names** | Per-person fallbacks, for when the default search returns too many people or none. |
 | **Download progress CSV** | Exports who you have done and when, for your own records. |
 
 Progress is stored in your browser's local storage, on that machine and browser only —
 so use the same browser each session, and export the CSV if you want a durable copy.
+
+## How the searches are built
+
+LinkedIn ANDs every keyword and treats `"quoted text"` as an exact phrase, so a
+narrow search quietly returns nobody. These are deliberately broad:
+
+- **No quotes anywhere.** An exact-phrase search drops anyone whose profile name is
+  spelled, accented or ordered differently from the roster.
+- **First given name + the whole family name**, so `Barbara Emma Maria Luisa Pizzoni`
+  searches as `Barbara Pizzoni` — extra given names rarely appear on a profile, but
+  compound surnames (`Cassar Torregiani`, `Scapa Passalacqua`) are used whole.
+- **Nothing but the name by default.** Adding `Leiden` only finds people who mention
+  Leiden on their profile, so it is a button you press when a common name gives too
+  many hits, not the default.
+
+Where a name can reasonably be searched more than one way, the extra ways appear as
+their own buttons next to the main one:
+
+| Case | Example | Buttons offered |
+|---|---|---|
+| Compound surname | Maria Cristina Hernandez Barcelo | `Maria Hernandez Barcelo` (default), `Maria Hernandez`, full name |
+| Several given names | Ana Paula Maia Soto | `Ana Soto` (default), full name |
+| Second/western name | Xiaoyan (Sharon) Huang | `Xiaoyan Huang` (default), `Sharon Huang` |
+| Maiden/alternate surname | Alina Huseinova (Yaroshchuk) | `Alina Huseinova` (default), `Alina Yaroshchuk` |
 
 ## The note
 
@@ -54,7 +79,7 @@ invitation limit (the longest is 182). Two shapes, picked automatically:
 | File | What it is |
 |---|---|
 | `leiden_connect.html` | **The interface.** Open in a browser. Self-contained, all 186 people embedded. |
-| `participants.csv` | All 186 as a spreadsheet: class, countries, both LinkedIn search links, a Google fallback, the ready note, and an empty Status column. |
+| `participants.csv` | All 186 as a spreadsheet: class, countries, the LinkedIn search links (name, and name + Leiden), a Google fallback, the ready note, and an empty Status column. |
 | `generate_leiden.py` | Source script with the transcribed roster. Re-run `python3 generate_leiden.py` to rebuild the CSV and the HTML. |
 | `template.html` | The HTML/CSS/JS shell the generator fills with participant data. Edit this, not `leiden_connect.html`. |
 

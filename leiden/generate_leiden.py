@@ -238,13 +238,22 @@ def name_parts(first, family):
     fam_alt = re.search(r"\((.+?)\)", family)
     base_family = re.sub(r"\s*\(.*?\)\s*", " ", family).strip()
 
-    search = f"{base_first} {base_family}"
+    full = f"{base_first} {base_family}"
+    # LinkedIn ANDs every keyword, so searching a four-given-name entry in full
+    # finds nobody. Drop the extra given names but keep the family name whole --
+    # compound surnames (Cassar Torregiani, Scapa Passalacqua) are used whole.
+    given = base_first.split()[0]
+    short = f"{given} {base_family}"
+    # ...and where the surname is compound, offer just its first word too, for
+    # anyone who goes by the paternal surname alone (Hernandez, not Hernandez Barcelo).
+    fam_first = base_family.split()[0]
+    short2 = f"{given} {fam_first}" if fam_first != base_family else ""
     alt = None
     if alias:
         alt = f"{alias.group(1)} {base_family}"
     elif fam_alt:
-        alt = f"{base_first} {fam_alt.group(1)}"
-    return greeting, search, alt
+        alt = f"{given} {fam_alt.group(1)}"
+    return greeting, short, short2, full, alt
 
 
 def relation(cls):
@@ -276,7 +285,7 @@ def build():
     for no, cls, first, family, study, current in ROSTER:
         if no == ME_NO:
             continue
-        greeting, search, alt = name_parts(first, family)
+        greeting, search, short2, full, alt = name_parts(first, family)
         based = current or study
         people.append({
             "no": no,
@@ -285,32 +294,40 @@ def build():
             "name": f"{first} {family}",
             "greet": greeting,
             "search": search,
+            "full": full if full != search else "",
+            "short2": short2,
             "alt": alt,
             "study": study,
             "current": current,
             "based": based,
             "same": cls == ME_CLASS,
             "gap": abs(int(cls.split("–")[0]) - int(ME_CLASS.split("–")[0])),
-            "liLeiden": li_url(f'"{search}" Leiden'),
+            # No quotes anywhere: LinkedIn treats a quoted string as an exact
+            # phrase, which drops anyone whose profile name is spelled or
+            # ordered even slightly differently.
             "liName": li_url(search),
-            "liAlt": li_url(f'"{alt}" Leiden') if alt else "",
+            "liLeiden": li_url(f"{search} Leiden"),
+            "liTax": li_url(f"{search} tax"),
+            "liFull": li_url(full) if full != search else "",
+            "liShort2": li_url(short2) if short2 else "",
+            "liAlt": li_url(alt) if alt else "",
             "google": "https://www.google.com/search?q="
-                      + quote_plus(f'site:linkedin.com/in "{search}" Leiden tax'),
+                      + quote_plus(f"site:linkedin.com/in {full} Leiden tax"),
         })
     return people
 
 
 def write_csv(people, path="participants.csv"):
     cols = ["No", "Class", "Name", "Country during study", "Current country",
-            "Same class as me", "LinkedIn search (name + Leiden)",
-            "LinkedIn search (name only)", "Google fallback",
+            "Same class as me", "LinkedIn search (name)",
+            "LinkedIn search (name + Leiden)", "Google fallback",
             "Connection note", "Status"]
     with open(path, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(cols)
         for p in people:
             w.writerow([p["no"], p["cls"], p["name"], p["study"], p["current"],
-                        "yes" if p["same"] else "", p["liLeiden"], p["liName"],
+                        "yes" if p["same"] else "", p["liName"], p["liLeiden"],
                         p["google"], note(p["greet"], p["cls"]), ""])
     return path
 
@@ -330,8 +347,16 @@ def card_html(p):
     """
     notes = {t: note(p["greet"], p["cls"], t) for t in ("event", "after", "plain")}
     find = " ".join(x for x in [p["name"], p["based"], p["alt"] or ""] if x).lower()
-    alt_btn = (f'<a class="btn alt" href="{p["liAlt"]}" target="_blank" rel="noopener">'
-               f'{esc(p["alt"])}</a>') if p["alt"] else ""
+    extra = ""
+    if p["liFull"]:
+        extra += (f'<a class="btn alt" href="{p["liFull"]}" target="_blank" rel="noopener">'
+                  f'full name</a>')
+    if p["short2"]:
+        extra += (f'<a class="btn alt" href="{p["liShort2"]}" target="_blank" rel="noopener">'
+                  f'{esc(p["short2"])}</a>')
+    if p["alt"]:
+        extra += (f'<a class="btn alt" href="{p["liAlt"]}" target="_blank" rel="noopener">'
+                  f'{esc(p["alt"])}</a>')
     return f"""<article class="card" data-no="{p['no']}" data-cls="{p['cls']}" data-gap="{p['gap']}"
  data-ctry="{esc(p['based'])}" data-find="{esc(find)}" data-sortname="{esc(p['name'])}"
  data-name="{esc(p['name'])}" data-study="{esc(p['study'])}" data-current="{esc(p['current'])}">
@@ -341,9 +366,11 @@ def card_html(p):
   data-event="{esc(notes['event'])}" data-after="{esc(notes['after'])}"
   data-plain="{esc(notes['plain'])}">{esc(notes['event'])}</span></div>
  <div class="actions">
-  <a class="btn go" href="{p['liLeiden']}" target="_blank" rel="noopener">Copy note &amp; open LinkedIn ↗</a>
-  <a class="btn alt" href="{p['liName']}" target="_blank" rel="noopener">name only</a>
-  {alt_btn}
+  <a class="btn go" href="{p['liName']}" target="_blank" rel="noopener"
+   data-name="{p['liName']}" data-leiden="{p['liLeiden']}" data-tax="{p['liTax']}"
+   >Copy note &amp; open LinkedIn ↗</a>
+  <a class="btn alt" href="{p['liLeiden']}" target="_blank" rel="noopener">+ Leiden</a>
+  {extra}
   <a class="btn alt" href="{p['google']}" target="_blank" rel="noopener">Google</a>
   <label class="chk jsonly"><input type="checkbox" data-done> done</label>
  </div></article>"""

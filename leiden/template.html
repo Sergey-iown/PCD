@@ -74,6 +74,11 @@
    <option value="class">Sort: by class (1998 → 2019)</option>
    <option value="name">Sort: by name</option>
   </select>
+  <select id="scope">
+   <option value="name">Search: name only</option>
+   <option value="leiden">Search: name + Leiden</option>
+   <option value="tax">Search: name + tax</option>
+  </select>
   <select id="tone">
    <option value="event">Note: at the event</option>
    <option value="after">Note: after the event</option>
@@ -87,7 +92,9 @@
 <div class="note"><strong>Human-in-the-loop, not a bot.</strong> Each button copies the note to your
  clipboard and opens LinkedIn search in a new tab — <em>you</em> press <em>Connect → Add a note → paste</em>.
  LinkedIn caps invitations at roughly 100–200 per week, so pace it: ~20 a day gets through all
- <!--COUNT--> in about ten days, in the order shown.</div>
+ <!--COUNT--> in about ten days, in the order shown. Searches are unquoted first-and-last name —
+ use <em>+ Leiden</em> or the <em>Search:</em> menu to narrow a common name, <em>full name</em> or
+ <em>Google</em> when the default finds nobody.</div>
 <main id="main"><div id="list">
 <!--CARDS-->
 </div><div id="nav"></div></main>
@@ -111,6 +118,10 @@ let mode = 'list', idx = 0;
 function tone(){ return $('tone').value; }
 function noteOf(c){ return c.querySelector('.note-text').dataset[tone()]; }
 
+function applyScope(){
+ const k = $('scope').value;
+ for (const c of CARDS) c.querySelector('a.go').href = c.querySelector('a.go').dataset[k];
+}
 function applyTone(){
  for (const c of CARDS){
   const t = noteOf(c);
@@ -212,6 +223,7 @@ $('mList').onclick = () => { mode = 'list'; $('mList').classList.add('on'); $('m
 $('mFocus').onclick = () => { mode = 'focus'; idx = 0; $('mFocus').classList.add('on'); $('mList').classList.remove('on'); render(); };
 ['q','cls','ctry','sort','hide'].forEach(id => $(id).addEventListener('input', () => { idx = 0; render(); }));
 $('tone').addEventListener('input', () => { applyTone(); render(); });
+$('scope').addEventListener('input', applyScope);
 $('reset').onclick = () => { if (confirm('Clear all progress?')){ store = {}; save(); render(); } };
 $('export').onclick = () => {
  const rows = [['No','Class','Name','Country during study','Current country','Connection note','Status','Marked at']];
@@ -226,5 +238,6 @@ $('export').onclick = () => {
  a.download = 'leiden_connect_progress.csv'; a.click(); URL.revokeObjectURL(a.href);
 };
 applyTone();
+applyScope();
 render();
 </script></body></html>
